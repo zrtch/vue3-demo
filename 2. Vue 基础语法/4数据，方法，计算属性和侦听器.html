@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const app = Vue.createApp({
+      data(){
+        return{
+          message:"hello",
+          count:5,
+          price:2,
+          newTotal:10
+        }
+      },
+      // 侦听器；通过watch可以监听变量的改变，然后去做一些异步的操作
+      watch:{
+        price(){
+          setTimeout(()=>{
+            console.log('price changed');
+          },3000)
+        }, 
+        // count 发生变化时，函数会执行
+        count(current,prev){
+          this.newTotal = current * this.price
+        },
+      },  
+      computed: {
+        // 当计算属性依赖的内容发生变更时，才会重新执行计算
+        // 定义计算属性 total; 这个数据是由其他的几个数据算出来的，当其他数据变化的时候，我也会跟着变
+        total() {
+          return Date.now()
+          // return  this.count * this.price
+        }
+      },
+      methods:{
+        handleClick(){
+          console.log('click', this.message);
+        },
+        // 可以在插值表达式里面使用
+        formString(string){
+          return string.toUpperCase()
+        },
+        // 只要页面重新渲染，才会重新计算
+        getTotal(){
+          return Date.now()
+          // return  this.count * this.price
+        }
+      },
+      template: `
+      <div @click="handleClick">{{ formString(message) }}</div>
+      <div>{{ total }}</div>
+      <div>{{ getTotal() }}</div>
+      <div>{{ newTotal }}</div>
+      `
+    })
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const app = Vue.createApp({
+      data(){
+        return{
+          message:"<b>hello</b>", 
+          show:true,
+          disabled:false,
+          event:'click'
+        }
+      },
+      methods:{
+        handleClick(){
+          console.log('事件绑定');
+        },
+        handlePrevent(){
+          console.log('阻止默认行为');
+        }
+      },
+      template: `
+        <input v-bind:disabled="disabled"/>
+        <div>{{ Math.max(1,2) }}</div>
+        <div v-html="message"></div>
+        <div v-once>{{ message }}</div>
+        <div v-if="show">{{ message }}</div>
+        <div v-on:click="handleClick">click</div>
+        <div @[event]="handleClick">click2</div>
+        <form action="https:www.baidu.com" @click.prevent="handlePrevent">
+          <button type="submit">提交</button>
+        </form>
+        `
+    })
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
