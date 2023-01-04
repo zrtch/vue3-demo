@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // 生命周期函数：在某一时刻会自动执行的函数
+    const app = Vue.createApp({
+      data(){
+        return{
+          message:"hello"
+        }
+      }, 
+      // 实例生成之前会自动执行的函数
+      beforeCreate(){
+        console.log('beforeCreate');
+      },
+      // 实例生成之后会自动执行的函数，对你的事件，生命周期函数，依赖注入都分析结束了。
+      created(){
+        console.log('created');
+      },
+      // 在组件内容被渲染到页面之前自动执行的函数
+      beforeMount(){
+        console.log(document.getElementById("root").innerHTML,'-> beforeMount');
+      },  
+      // 在组件内容被渲染到页面之后自动执行的函数
+      mounted(){
+        console.log(document.getElementById("root").innerHTML,'-> mounted');
+      },
+      // 当数据发生变化时会立即自动执行的函数；通过在控制台改变数据 vm.$data.message = '111'
+      beforeUpdate(){
+        console.log('beforeUpdate');
+      },
+      // 当数据发生变化，页面重新渲染后，会自动执行的函数
+      updated(){
+        console.log('updated');
+      },
+      // 当Vue应用失效时，自动执行的函数；通过在控制台调用 app.unmount() 
+      beforeUnmount(){
+        console.log('beforeUnmount');
+      },
+      // 当Vue应用失效时，且dom完全销毁之后，自动执行的函数
+      unmounted(){
+        console.log('unmounted');
+      },
+      template: `<div>{{ message }}</div>`
+    })
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
