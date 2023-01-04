@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const app = Vue.createApp({
+      data(){
+        return{
+          listArray:['hello','world','haha'],
+          listObject:{ firstName: 'dell', lastName:'lee' },
+        }
+      },
+      methods:{
+        hanldeAddArray(){
+          // 1.使用数组的变更函数push, pop, shift, unshift, splice, sort, reverse
+           this.listArray.push('hello')
+          // this.listArray.pop()
+          // this.listArray.shift()
+          // this.listArray.unshift('heihei')
+          // this.listArray.reverse()
+
+          // 2.直接替换数组
+          // this.listArray = ['bye', 'world']
+          // this.listArray = ['bye','world'].filter(()=> item => item === 'bye')
+
+          // 3.直接更新数组的内容
+          // this.listArray[1] = 'hello'
+        },
+        hanldeAddObj(){
+          // 直接添加对象的内容，也可以自动的展示出来
+          this.listObject.age = 100     
+          this.listObject.sex = 'male'     
+        }
+      },  
+      // 做数据循环的时候可以使用 v-for 指令；循环的每一项尽量给个key值，就会有效提升vue的性能
+      // 如果循环的时候做一些判断的时候，v-for和v-if在一个标签是有问题的，v-for优先级会更高，如果必须要做判断，在里面再包一层
+      // 包的这层可以使用占位符 template ，省得多出一个div
+      template: `
+        <div>
+          <div v-for="(item,index) in listArray" :key="index">
+            {{item}} -- {{index}}  
+          </div>
+          <button @click="hanldeAddArray">数组新增</button>
+          
+          <template v-for="(value,key,index) in listObject">
+            <div v-if="key !== 'lastName'">
+              {{ value }} -- {{key}} -- {{index}}
+            </div>
+          </template>
+          <button @click="hanldeAddObj">对象新增</button>
+        </div>
+      `
+    })
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

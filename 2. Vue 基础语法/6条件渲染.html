@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const app = Vue.createApp({
+      data(){
+        return{
+          show: false,
+          conditionOne: false,
+          conditionTwo: true,
+        }
+      },
+      // 只有show这个变量为true的时候div标签才会显示；v-if通过控制这个元素在dom上存在与否来控制展示隐藏
+      // v-show 是通过样式来控制
+      // 如果频繁改变dom展示与否的话，使用v-show,因为它不会频繁销毁dom，对性能好点
+      template: `
+        <div v-if="show">hello world</div>
+
+        <div v-if="conditionOne">if</div>
+        <div v-else-if="conditionTwo">else if</div>
+        <div v-else>else</div>
+
+        <div v-show="show">hello world</div>
+      `
+    })
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

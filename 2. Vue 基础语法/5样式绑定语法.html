@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .red{
+      color: red;
+    }
+    .green{
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+
+    const app = Vue.createApp({
+      data(){
+        return{
+          classString: "red",
+          classObject: { red: true, green: true }, // 通过对象的方式来判断你到点要不要展示这个类
+          classArray:['red','green',{ brown: true }],
+          styleObject:{color: "orange"} // 行内样式使用对象的形式 
+        }
+      },
+      template: `
+          <div :class="classString">hello world</div>
+          <div :class="classObject">hello world</div>
+          <div :class="classArray">hello world
+            <demo class="red" />
+          </div>
+          <div :style="styleObject">orange</div>
+        `
+    })
+
+    app.component('demo',{
+      template: `
+        <div :class="$attrs.class">one</div>
+        <div>two</div>
+      `
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
