@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // 组件具备复用性，组件里面的数据是被当前这个组件所独享的，而不会和其他组件共享。
+
+    // 局部组件：定义一个常量，要注册之后才能使用，声明之后再模板就可以直接用了，建议大写字母开头，驼峰命名
+    const CounterLocal = {
+      template: `<div>局部组件</div>`
+    }
+    const app = Vue.createApp({
+      components:{ CounterLocal },
+      template: `
+        <div>
+          <CounterLocal />
+          <counter-parent />
+          <counter />
+        </div>
+      `
+    })
+
+    // 全局组件，只要定义了，处处可以使用，性能不高，但是使用起来简单。建议小写字母单词，中间横线间隔
+    app.component('counter-parent',{
+      template: `<counter />`
+    })
+    app.component('counter',{
+      data(){
+        return{
+          count:1
+        }
+      },
+      template: `<div @click="count += 1">{{count}}</div>`
+    })
+
+
+
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

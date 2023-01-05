@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    // 多个知道时候可以使用 v-bind="params"
+    // 属性传的时候，使用content-abc这种命名，接的时候，使用contentAbc命名
+    // 单项数据流：子组件可以使用父组件传递过来的数据，但是绝对不能修改传递过来的数据
+    const app = Vue.createApp({
+      data() {
+        return {
+          params: {
+            content: 2000,
+            a: 111,
+            b: 222,
+            c: 333
+          },
+          content: 'abc'
+        }
+      },
+      template: `<div>
+          <test v-bind="params" :content-abc="content"/>
+          <counter :count="params.a"/>
+          <nonProps msg="hello" msg1="hello2"/>
+        </div>`
+    })
+    // 单项数据流
+    app.component('counter', {
+      props: ['count'],
+      data() {
+        return {
+          myCount: this.count
+        }
+      },
+      template: `
+        <div @click="myCount += 1">单向数据流：{{myCount}}<button>增加</button></div>
+      `
+    })
+ 
+    // Non-Props 属性:父组件给子组件传递内容的是时候， 子组件不通过props来接收；一般用作样式修饰 
+    app.component('nonProps', {
+      inheritAttrs: false, // 不继承父组件传递过来的 Non-Props 属性
+      template: `
+      <div>Non-Props---11</div>
+      <div :msg="$attrs.msg">Non-Props---11</div>
+      `
+    })
+
+    app.component('test', {
+      props: {
+        contentAbc: String,
+        content: Number,
+        a: Number,
+        b: Number,
+        c: Number,
+      },
+      template: `<div>
+        <div>{{contentAbc}}</div>
+        {{ content }}--{{a}}--{{b}}--{{c}}
+      </div>`
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+
+</html>

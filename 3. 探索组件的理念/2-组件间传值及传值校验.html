@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const app = Vue.createApp({
+      data(){
+        return {
+          num: 2000
+        }
+      },  
+      template: `<div><test :content="num" /></div>`
+    })
+
+    // type: String, Boolean, Number, Object, Array, Symbol, Funciton
+    // required 必填选项
+    // default 默认值
+    // validator 深度校验
+    app.component('test',{
+      // props做类型校验
+      props:{ 
+        content: {
+          type: Number,
+          default:22,
+          required: true,
+          validator: function(value){
+            return value < 1000
+          }
+        }
+      },
+      template:`<div>{{content}}</div>`
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
