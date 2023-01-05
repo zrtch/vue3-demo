@@ -8,24 +8,56 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root"></div> 
   <script>
     const app = Vue.createApp({
       data(){
-        return {
-          num: 2000
-        }
-      },  
-      template: `<div><test :content="num" /></div>`
-    })
-    app.component('test',{
-      props:{ 
-        content: {
-          type: Number,
+        return{
+          count: 1,
+          count2:2
         }
       },
-      template:`<div>{{content}}</div>`
+      methods:{
+        handleAddOne(param1,param2){
+          console.log('监听addOne事件', param2  );
+          this.count += param2
+        }
+      },
+      template: `<div>
+          <test :count="count" @add="handleAddOne"/>
+          <counter v-model="count2"/>
+        </div>`
     })
+
+    app.component('test',{
+      props:['count'], 
+      emits:{ // 通过emtis向外触发的参数做一些校验
+        add: (count)=>{
+          if(count>0){
+            return true
+          }
+          return false
+        }
+      },
+      methods:{
+        handleClick(){
+          // 向父组件触发一个 addOne 的事件
+          this.$emit("add",2,4)
+        }
+      },
+      template:`<div @click="handleClick">{{count}}</div>`
+    })
+
+    // 直接在父组件使用v-model
+    app.component('counter',{
+      props:['modelValue'],
+      methods:{
+        handleClick(){
+          this.$emit("update:modelValue",this.modelValue + 3)
+        }
+      },
+      template: `<div @click="handleClick">{{modelValue}}</div>`
+    })    
 
     const vm = app.mount('#root') 
   </script>
