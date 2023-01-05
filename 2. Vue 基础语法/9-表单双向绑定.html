@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            message: 'hello',
+            ischeck: [],
+            isradio: '',
+            options: [
+              {
+                text: 'a',
+                value: { value: 'a' },
+              },
+              {
+                text: 'b',
+                value: { value: 'b' },
+              },
+              {
+                text: 'c',
+                value: { value: 'c' },
+              },
+            ],
+            selectValue: [],
+            value:'11',
+            num:11
+          }
+        },
+        // lazy修饰符：不让数据快速变化，失去焦点再去变化  
+        // number修饰符：进行数字的转换
+        // trim修饰符：把前后输入的空格去掉
+        template: `<div>
+          <div>
+            {{message}}
+            <input v-model="message" />
+            <textarea v-model="message"/>  
+          </div>
+          <div>
+            {{ischeck}}--->
+            dell <input type="checkbox" v-model="ischeck" value="dell"/>
+            lee <input type="checkbox" v-model="ischeck" value="lee"/>
+            hello <input type="checkbox" v-model="ischeck" value="hello"/>
+          </div>
+          <div>
+            {{isradio}}--->
+            dell <input type="radio" v-model="isradio" value="dell"/>  
+            lee <input type="radio" v-model="isradio" value="lee"/>  
+          </div>
+          <div>
+            {{selectValue}}--->
+            <select v-model="selectValue" multiple>
+              <option v-for="item in options" :value="item.value"> {{item.text}} </option>  
+            </select>  
+          </div>
+          <div>
+            修饰符：{{value}}
+            <input v-model.lazy="value"/>
+            <input v-model.number="num" type="number">
+            <input v-model.trim="value">
+          </div>
+        </div>`,
+      })
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const app = Vue.createApp({
+      data(){
+        return{
+          counter: 0
+        }
+      },
+      methods:{
+        // 事件修饰符
+        // @click.stop，停止向外做这个事件的冒泡
+        // @click.self，self表示这个事件的触发必须是我自己这个dom标签的触发才会执行。
+        // @click.prevent，组织默认行为 
+        // @click.capture，捕获
+        // @click.once，事件只执行一次
+        handleClick(num,event){  // 要把原生的事件 $event 传入
+          console.log('🤩  handleClick  event', event);
+          this.counter += num
+        },
+        handleClick1(){
+          console.log(1);
+        },
+        handleClick2(){
+          console.log(2);
+        },
+        handleDivClick(){
+          console.log('div click'); 
+        },
+        handleBtnClick(){
+          console.log('禁止冒泡');
+        },
+        // 按键修饰符
+        // @keydown.enetr，当你按回车的时候的才会执行
+        // 还有 tab, delete, esc, up, down；通过这些修饰符来修饰按键事件的绑定
+        handleKeyDown(){ 
+          console.log('keydown');
+        },
+        // 鼠标修饰符：left， right，middle
+        // 精确修饰符 exact：当你按住ctrl这个键才会触发
+        // @click.ctrl.exact 
+        handleExact(){
+          console.log('handleExact');
+        }
+      },
+      template: `<div>
+          {{counter}}
+          <button @click="handleClick(2,$event)">button</button>
+
+          <button @click="handleClick1(), handleClick2()">多个函数</button>
+
+          <div @click="handleDivClick">
+            <button @click.stop="handleBtnClick">禁止冒泡</button>
+          </div>
+
+          <input @keydown.enter="handleKeyDown" />
+
+          <button @click.ctrl.exact="handleExact">精确修饰符</button>
+        </div>`
+    })
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
