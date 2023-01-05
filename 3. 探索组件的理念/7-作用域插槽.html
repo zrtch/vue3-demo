@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head> 
+<body>
+  <div id="root"></div>
+  <script>
+    // 作用域插槽：当子组件渲染的内容要由父组件决定的时候，父组件可以调用子组件里面的数据
+    // 调用slot的时候把数据传给slot，然后slot通过 v-slot="{item}" 进行接收
+    const app = Vue.createApp({
+      template: `
+        <list v-slot="{item}">
+            <span>{{item}}</span>
+        </list>
+      `
+    })  
+    app.component('list',{
+      data(){
+        return{
+          list:['1','2','3']
+        }
+      },  
+      template:`
+        <div>
+          <slot v-for="item in list" :item="item"/>
+        </div>
+      `
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head> 
+<body>
+  <div id="root"></div>
+  <script>
+    // 异步组件：可以通过异步的方式动态加载一些其他的组件，带来的好处就是可以把大型的项目拆分成很多小的js文件，然后在需要用到这些小的js文件，再去引入这些js文件进行使用。
+    const app = Vue.createApp({
+      template: `
+        <common-item />
+        <async-component-item />
+      `
+    })  
+
+    app.component('common-item',{
+      template:`
+        <div>hello world</div>
+      `
+    })
+
+    app.component('async-component-item',Vue.defineAsyncComponent(()=>{
+      return new Promise((resolve,reject)=>{ 
+        setTimeout(()=>{
+          resolve({
+            template:`<div>this is async component</div>`
+          })
+        },2000) //过两秒触发了这个Promise,然后告诉你这个组件展示什么
+      })
+    }))
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

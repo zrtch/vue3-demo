@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // slot 插槽，通过<slot></slot>去调用传递进来的内容即可；用于dom或者标签的传递。
+    // slot中使用的数据，作用域的问题。父模版里调用的数据属性,使用的都是父模版里的数据；子模版里调用的数据属性,使用的都是子模版里的数据
+    // slot默认值设定：<slot>default value</slot>；如果没传插槽，就会使用默认值 default value
+    // 具名插槽：要把插槽拆成几个部分，然后在下面分开的调用，通过name去做区分
+    // 插槽简写：v-slot:header -> #header
+    const app = Vue.createApp({
+      data(){
+        return{
+          text:'提交'
+        }
+      },
+      template: `
+        <layout>
+          <template v-slot:header>
+            <div>header</div>
+          </template>
+          <template v-slot:footer>
+            <div>footer</div>
+          </template>
+        </layout>
+      `
+    }) 
+    app.component('layout',{
+      methods:{
+        handleClick(){
+          console.log(222);
+        }
+      },
+      template:`
+        <div>
+          <slot name="header"></slot>  
+          <div>content</div>
+          <slot name="footer"></slot>  
+        </div>
+      `
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
