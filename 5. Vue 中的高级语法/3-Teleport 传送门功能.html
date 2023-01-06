@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .area{
+        position: absolute;
+        left: 50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+        width: 200px;
+        height: 300px;
+        background: green;
+      }
+      .mask{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: #000 ;
+        opacity: 0.5;
+        color: #fff;
+        font-size: 100px;
+      }
+    </style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // teleport 传送门：比如做一些模态框，就可以把你的dom元素放到另一个元素。
+      // 不渲染在area这个标签上，而是传送到body标签上去
+      const app = Vue.createApp({
+        data(){
+          return{
+            show: false
+          }
+        },
+        methods:{
+          handleBtn(){
+            this.show = !this.show
+          }
+        },
+        template: `
+        <div class="area">
+          <button @click="handleBtn">按钮</button>  
+          <teleport to="body">
+            <div class="mask" v-show="show">hello</div>
+          </teleport>
+        </div>
+      `,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
