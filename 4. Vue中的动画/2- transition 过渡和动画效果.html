@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      @keyframes shake {
+        0% {
+          transform: translateX(-100px);
+        }
+
+        50% {
+          transform: translateX(-50px);
+        }
+
+        100% {
+          transform: translateX(50px);
+        }
+      }
+
+      /* 不写name就以 v 开头 */
+      .v-enter-from {
+        /* 出场动画 */
+        color: red;
+      }
+
+      .v-enter-to {
+        /* 入场动画 */
+      }
+
+      /* 整个动画过程中要怎么执行这个动画 */
+      .v-enter-active {
+        animation: shake 2s;
+        transition: color 2s ease-in;
+      }
+
+      .v-leave-active {
+        color: red;
+        animation: shake 2s;
+        transition: all 2s ease-in;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script>
+      // 单元素/单组件的入场出场动画
+      // enter-active-class：自定义的class名字可以帮助我们很方便的和第三方库css动画库相结合。
+      // <transition :duration="1000"> 通过duration控制动画时长。
+      const app = Vue.createApp({
+        data() {
+          return {
+            show: false,
+          }
+        },
+        methods: {
+          handleClick() {
+            this.show = !this.show
+          },
+          handleBeforeEnter(el) {
+            el.style.color = 'red'
+          },
+          // 执行动画效果
+          handleEnterAcitve(el, done) {
+            const animation = setInterval(() => {
+              const color = el.style.color
+              if (color === 'red') {
+                el.style.color = 'green'
+              } else {
+                el.style.color = 'red'
+              }
+            }, 1000)
+
+            setTimeout(() => {
+              clearInterval(animation) // 清楚动画
+              done()
+            }, 3000)
+          },
+          handleEnterEnd(){
+            alert("js动画效果")
+          }
+        },
+        template: `
+      <div>
+        <transition :duration="{enter:1000, leave:5000}">
+          <div v-if="show">单元素</div>
+        </transition>
+
+        <transition  
+          enter-active-class="animate__animated animate__tada"
+          leave-active-class="animate__animated animate__tada"
+        >
+          <div v-if="show">animate 样式</div>
+        </transition>
+
+        <transition 
+          :css="false" 
+          @before-enter="handleBeforeEnter"
+          @enter="handleEnterAcitve"
+          @after-enter="handleEnterEnd"
+        >
+            <div  v-if="show">js动画</div>
+        </transition>
+
+        <p>
+          <button @click="handleClick">切换</button>  
+        </p>
+      </div>`,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>

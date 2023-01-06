@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // v-once: 标签只被渲染一次，后面数据发生变化也不要在渲染。
+    // ref：实际上是获取Dom节点/组件引用的一个语法
+    // provide / inject：多层组件传值，provide提供数据，inject直接使用
+    const app = Vue.createApp({
+      data(){
+        return {
+          num: 1
+        }
+      },  
+      provide(){
+        return{
+          count: this.num
+        }
+      },
+      mounted(){
+        // 获取dom
+        console.log(this.$refs.count);
+        // 也可以通过引用来调用子组件方法
+        this.$refs.common.sayHello()
+      },
+      template: `<div @click="num += 1" v-once>
+          <div ref="count">{{num}}</div>
+          <common-item ref="common"/>
+          <child :count="num"/>
+        </div>`
+    })
+
+    app.component('common-item',{
+      methods:{
+        sayHello(){
+          console.log('hello');
+        }
+      },
+      template: `hello`
+    })
+    // 子组件
+    app.component('child',{
+      template:`<child-child />`
+    })
+    // 孙子组件
+    app.component('child-child',{
+      inject:['count'],
+      template:`<div>{{count}}</div>`
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

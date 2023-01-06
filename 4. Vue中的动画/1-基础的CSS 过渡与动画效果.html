@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* 动画 */
+    @keyframes leftToRight{
+      0%{
+        transform: translateX(0px);
+      }
+      50%{
+        transform: translateX(100px);
+      }
+      100%{
+        transform: translateX(0px);
+      }
+    }
+    .animation{
+      animation: leftToRight 3s;
+    }
+    /* 过渡 */
+    .transition{
+      transition: 3s background-color ease;
+    }
+    .blue{
+      background-color: blue;
+    }
+    .green{
+      background-color: green;
+    }
+  </style>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // 过渡：从一个状态变成另一个状态，比如颜色
+    // 动画：一个元素运动的情况
+    const app = Vue.createApp({
+      data(){
+        return {
+          animate:{
+            animation:false,
+          },
+          styleObj:{
+            background:'blue'
+          }
+        }
+      },  
+      methods:{
+        handleClick(){
+          this.animate.animation = !this.animate.animation
+        },
+        handleTran(){
+          if(this.styleObj.background ==='blue'){
+            this.styleObj.background ='green'
+          }else{
+            this.styleObj.background ='blue'
+          }
+        }
+      },
+      template: `<div>
+        <div :class="animate">这是动画</div>
+        <button @click="handleClick">切换</button>  
+        <div class="transition" :style="styleObj">这是过渡</div> 
+        <button @click="handleTran">切换</button>  
+      </div>`
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
