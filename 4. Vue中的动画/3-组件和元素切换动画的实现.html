@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      .v-leave-to{
+        opacity: 0;
+      }
+      .v-enter-from{
+        opacity: 0;
+      }
+      .v-enter-active,
+      .v-leave-active{
+        transition:  opacity 2s ease-in;
+      }
+      .v-leave-from,
+      .v-enter-to{
+        opacity: 1;
+      }
+      
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script>
+      // 多个单组件之间实现切换
+      const componentA = ({
+        template:`<div>hello world</div>`
+      })
+
+      const componentB = ({
+        template:`<div>bye world</div>`
+      })
+
+      // <transition mode="out-in" appear> mode:先隐藏在展示；appear首次进入也会有动画效果
+      const app = Vue.createApp({
+        data() {
+          return {
+            component: 'component-a',
+          }
+        },
+        components:{
+          'component-a':componentA,
+          'component-b':componentB,
+        },
+        methods: {
+          handleClick() {
+            if(this.component === 'component-a'){
+              this.component = 'component-b'
+            }else{
+              this.component = 'component-a'
+            }
+          },
+        },
+        template: `
+      <div>
+        <transition mode="out-in" appear>
+          <component :is="component"/>
+        </transition>
+        <p>
+          <button @click="handleClick">切换</button>  
+        </p>
+      </div>`,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
