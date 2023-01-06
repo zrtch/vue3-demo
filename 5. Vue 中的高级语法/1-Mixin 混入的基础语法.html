@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // mixin混入：就是把一个对象混入到组件里。
+    // 组件 data ，methods 优先级高于 mixin data 优先级。 当你组件没有当前数据的时候，就会使用混入进来的数据
+    // 生命周期函数，先执行mixin里面的，再执行组件里面的
+    // 自定义的属性，组件种的属性优先级高于mixin属性的优先级
+    const myMixin = { // 局部mixin
+      data(){
+        return { number: 2, count: 1}
+      },
+      created(){
+        console.log('先执行 mixin');
+      }
+    }
+    const app = Vue.createApp({
+      data(){
+        return { number:1 }
+      },  
+      mixins:[myMixin], 
+      created(){
+        console.log('后执行组件');
+      },
+      methods:{
+        handleClick(){
+          console.log('handleClick');
+        }
+      },
+      template: `
+        <div>
+          <div>{{number}}</div>
+          <child />
+          <all />
+          <button @click="handleClick">增加</button>
+        </div>
+      `
+    })
+
+    app.component('child',{
+      mixins:[myMixin], //必须得在子组件再去用一下
+      template:`<div>{{count}}</div>`
+    })
+
+    
+    // 全局mixin：它会默认注入到每个组件，直接可以用。不推荐大家使用
+    app.mixin({ 
+      data(){
+        return { number: '全局mixin', count: 1}
+      },
+    })
+
+    app.component("all",{
+      template:`<div>{{number}}</div>`
+    })
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

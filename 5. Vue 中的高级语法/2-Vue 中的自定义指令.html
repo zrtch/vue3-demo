@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .header{
+        position: absolute;
+      }
+    </style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // 自定义指令 directive
+      // 局部的focus自定义指令
+      const directives = {
+        focus: {
+          mounted(el) {
+            el.focus()
+          },
+        },
+      }
+      const app = Vue.createApp({
+        data(){
+          return{
+            distance: 100
+          }
+        },
+        directives: directives,
+        template: `
+        <div>
+          <input v-focus />
+          <div v-pos:left="distance" class="header">postion</div>
+        </div>
+      `,
+      })
+
+      // 定义了一个全局pos的自定义指令，使用它前面加个v-就行
+      app.directive('pos',{
+        mounted(el,binding){
+          el.style[binding.arg] = binding.value + 'px'
+        },
+        updated(el,binding){
+          el.style[binding.arg] = binding.value + 'px'
+        }
+      })
+
+      // 使用一个函数对包含了mounted和updated 进行简写
+      app.directive('pos1',(el,binding)=>{
+        el.style[binding.arg] = binding.value + 'px'
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
