@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+     const app = Vue.createApp({
+      data(){
+        return {
+          name:'dell',
+          age:11
+        }
+      },
+      rules:{
+        age:{
+          validate: (age) => { return age > 25 },
+          message:'太年轻了'
+        }
+      },
+      template: `<div>name:{{name}}, age:{{age}}</div>`
+    })
+
+    // 对数据做检验的插件,扩展vue的语法想做一些自定义的时候，完全可以通过plugin来做。
+    const validatePlugin = (app, options) =>{
+      app.mixin({
+        created(){
+          for(let key in this.$options.rules){
+            const item =  this.$options.rules[key];
+            this.$watch(key,(value)=>{
+              const result = item.validate(value);
+              if(!result) console.log(item.message);
+            })
+          }
+        }
+      })
+    }
+
+    app.use(validatePlugin)
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>

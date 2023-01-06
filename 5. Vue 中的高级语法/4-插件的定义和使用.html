@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // plugin插件，也是把通用性的功能封装起来
+    const myPlugin = {
+      install(app, options){
+        // app：就是Vue的实例
+        // options：额外的参数会放到options里
+        app.provide('name','dell lee') // 在app里扩展了这个名字
+        app.directive('focus',{ // 扩展自定义指令
+          mounted(el){
+            el.focus()
+          }
+        })
+        app.mixin({ // 扩展mixin 
+          mounted(){
+            console.log("mixin");
+          }
+        })
+      }
+    }
+ 
+    const app = Vue.createApp({
+      template: `<div><test /></div>`
+    })
+    app.component('test',{
+      inject:['name'],
+      template:`
+        <div>{{name}}</div>
+        <input v-focus />
+      `
+    })
+
+    app.use(myPlugin, {name:'dell'}) // 使用myPlugin这个插件
+
+    const vm = app.mount('#root') 
+  </script>
+</body>
+</html>
