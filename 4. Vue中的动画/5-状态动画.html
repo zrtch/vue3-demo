@@ -12,18 +12,18 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
     <style>
-      .v-enter-from{
+      .v-enter-from {
         opacity: 0;
         transform: translateY(30px);
       }
-      .v-enter-active{
+      .v-enter-active {
         transition: all 1s ease-in;
       }
-      .v-enter-to{
+      .v-enter-to {
         opacity: 1;
         transform: translateY(0px);
       }
-      .v-move{
+      .v-move {
         transition: all 1s ease-in;
       }
       .list-item {
@@ -36,23 +36,30 @@
   <body>
     <div id="root"></div>
     <script>
-      // 列表动画使用 transition-group包裹，然后进行css动画编写
+      // 状态动画，如果做一些svg这种可以通过数据描述图片效果的时候，就可以在数据里面控制一些变量，svg里面的坐标根据这些数据进行变化。
       const app = Vue.createApp({
         data() {
           return {
-            list:['1','2','3']
+            number: 1,
+            animateNumber: 1,
           }
         },
         methods: {
-          handleClick(){
-            this.list.unshift(this.list.length + 1)
-          }
+          handleClick() {
+            this.number = 10
+            if (this.animateNumber < this.number) {
+              const animation = setInterval(() => {
+                this.animateNumber += 1
+                if (this.animateNumber === 10) {
+                  clearInterval(animation)
+                }
+              }, 100)
+            }
+          },
         },
         template: `
       <div>
-        <transition-group>
-          <span class="list-item" v-for="item in list" :key="item">{{item}}</span>
-        </transition-group>
+          <span>{{animateNumber}}</span>
         <p>
           <button @click="handleClick">增加</button>  
         </p>
