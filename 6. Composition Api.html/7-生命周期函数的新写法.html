@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const app = Vue.createApp({
+        // beforeMount => onBoforeMount
+        // beforeMount => onBeforeMount
+        // mounted => onMounted
+        // beforeUpdate =>onBeforeUpdated
+        // beforeUnmount => onBeforeUnmount
+        // unmouted => onUnmounted
+        // onRenderTracked：每次渲染后重新收集响应式依赖
+        // onRenderTriggered：每次触发页面重新渲染时自动执行
+        // 没有beforeCreate和created是因为这两个函数在setup函数之间，所以就没提供
+        setup() {
+          const {
+            ref,
+            onBeforeMount,
+            onMounted,
+            onBeforeUpdate,
+            onUpdated,
+            onRenderTracked,
+            onRenderTriggered,
+          } = Vue
+          const name = ref('dell')
+          onBeforeMount(() => {
+            console.log('onBeforeMount')
+          })
+          onMounted(() => {
+            console.log('onMounted')
+          })
+          onBeforeUpdate(() => {
+            console.log('onBeforeUpdate')
+          })
+          onUpdated(() => {
+            console.log('onUpdated')
+          })
+          onRenderTracked(() => {
+            console.log('onRenderTracked')
+          })
+          onRenderTriggered(() => {
+            console.log('onRenderTriggered')
+          })
+          const handleClick = () => {
+            name.value = 'lee'
+          }
+          return {
+            name,
+            handleClick,
+          }
+        },
+
+        template: `
+        <div @click="handleClick">{{name}}</div>
+      `,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
