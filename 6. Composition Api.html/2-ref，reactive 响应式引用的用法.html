@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // 原理，通过proxy 对数据进行封装，当数据变化时，触发模版等内容的更新
+      // ref 处理基础类型的数据
+      // reactive处理非基础类型的数据，比如对象数组
+      // readonly 对响应式的内容做一个限制，不可修改
+      // toRefs:把一个reactive返回的对象转化成ref一种方式；创建一个reactive的对象你直接解构的话再模板是不能使用的，不具备响应式，如果想具备响应式，就调用toRefs转换就可以解构，再模板就可以具备响应式。
+      const app = Vue.createApp({
+        template: `
+        <div>{{name}}---{{nameObj.age}}</div>
+      `,
+        setup() {
+          // proxy , 'dell’变成proxy({value: 'dell'})这样的一个响应式引用
+          // const { ref } = Vue
+          // let name = ref('dell')
+          // setTimeout(() => {
+          //   name.value = 'lee'
+          // })
+          // return {
+          //   name,
+          // }
+
+          // proxy , { age: 11 }变成proxy({ age: 11}）这样的一个响应式引用
+          const { reactive, readonly } = Vue
+          const nameObj = reactive({ age: 11 })
+          const copynameObj = readonly(nameObj)
+          setTimeout(() => {
+            nameObj.age = 22
+            copynameObj.age = 33
+          }, 1000)
+          return {
+            nameObj,
+            copynameObj,
+          }
+        },
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
