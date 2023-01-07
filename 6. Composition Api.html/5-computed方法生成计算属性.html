@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // computed 计算属性
+      const app = Vue.createApp({
+        setup() {
+          const { ref, computed } = Vue
+          const count = ref(0)
+          const handleAdd = () => {
+            count.value += 1
+          }
+          //调用computed方法，里面接收一个回调函数，去返回一个通过去其他属性计算出来的新值
+          // const countFive = computed(() => {
+          //   return count.value + 5
+          // })
+
+          let countFive = computed({
+            // get方法就是读取他的内容
+            get: () => {
+              return count.value + 5
+            },
+            // set方法对他做一些赋值
+            set: (param) => {
+              count.value = param - 5
+            },
+          })
+          setTimeout(() => {
+            countFive.value = 50
+          }, 2000)
+
+          return {
+            count,
+            countFive,
+            handleAdd,
+          }
+        },
+        template: `
+          <div @click="handleAdd">
+            {{count}} --- {{countFive}}
+          </div>
+      `,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
