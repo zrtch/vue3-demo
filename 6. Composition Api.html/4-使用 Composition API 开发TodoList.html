@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // 可以把数据和一些数据的操作摘出来，封装成小的函数进行维护
+      // 关于list操作的内容进行了封装
+      const listRelativeEffect = () => {
+        const { reactive } = Vue
+        const list = reactive([])
+        const addItemToList = (item) => {
+          list.push(item)
+        }
+        return {
+          list,
+          addItemToList,
+        }
+      }
+      // 关于inputValue 操作的内容进行了封装
+      const inputRelativeEffect = () => {
+        const { ref } = Vue
+        const inputValue = ref('')
+        const handleInputChange = (e) => {
+          inputValue.value = e.target.value
+        }
+        return {
+          inputValue,
+          handleInputChange,
+        }
+      }
+
+      const app = Vue.createApp({
+        setup() {
+          // 流程调度中转，知道我要操作list,inputValue，所以从不同的地方找到
+          const { list, addItemToList } = listRelativeEffect()
+          const { inputValue, handleInputChange } = inputRelativeEffect()
+          return {
+            list,
+            inputValue,
+            addItemToList,
+            handleInputChange,
+          }
+        },
+        template: `
+          <div>
+            <div>
+              <input :value="inputValue" @input="handleInputChange"/>
+              <div>{{inputValue}}</div>
+              <button @click="()=> addItemToList(inputValue)">提交</button>
+            </div>
+          </div>
+          <ul>
+            <li v-for="item in list" :key="item">{{item}}</li>
+          </ul>
+      `,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
