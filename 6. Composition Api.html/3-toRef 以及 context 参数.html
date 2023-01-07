@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // toRef：可能出现对象里面没有对应的属性值的时候，又想让值具备响应式的时候
+      // const app = Vue.createApp({
+      //   template: `
+      //   <div>{{data.name}}--{{data.age}}</div>
+      // `,
+      //   setup(props, context) {
+      //     const { reactive, toRef } = Vue
+      //     const data = reactive({ name: 'dell' })
+      //     const age = toRef(data, 'age')
+      //     setTimeout(() => {
+      //       data.age = 11
+      //     }, 1000)
+      //     return {
+      //       data,
+      //     }
+      //   },
+      // })
+
+      const app = Vue.createApp({
+        methods: {
+          handleChange() {
+            console.log('context的emit数据')
+          },
+        },
+        template: `
+        <child @change="handleChange">parent</child>
+      `,
+      })
+
+      app.component('child', {
+        template: `
+          <div @click="handleClick">child</div>
+        `,
+        setup(props, context) {
+          const { attrs, slots, emit } = context
+          console.log(attrs) // 指的是父组件传递过来的 None - Props属性
+
+          console.log(slots.default()) //插槽内容可以直接通过slots来获取
+          // const { h } = Vue
+          // return () => h('div', {}, slots.default())
+
+          function handleClick() {
+            emit('change') //可以实现传统的this.$emit向上触发事件的功能
+          }
+          return {
+            handleClick,
+          }
+        },
+      })
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
