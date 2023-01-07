@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // watch 侦听器，具备一定的惰性lazy
+      // 参数可以拿到原始和当前值，也可以侦听多个数据的变化，用一个侦听器承载
+      // watchEffect 偏向于 effect
+      // 加上{immediate:true}就会让他立即执行，就没有惰性
+
+      const app = Vue.createApp({
+        setup() {
+          const { reactive, toRefs, watch, watchEffect } = Vue
+          const nameObj = reactive({ name: 'dell', englishName: 'lee' })
+
+          // watch(
+          //   // 可以侦听多个数据的变化，用一个侦听器承载
+          //   [() => nameObj.name, () => nameObj.englishName],
+          //   ([curName, curEng], [prevName, prevEng]) => {
+          //     console.log(curName, prevName, '---', curEng, prevEng)
+          //   },
+          //   { immediate: true }
+          // )
+
+          // 立即执行 没有惰性 immediate；比如一些异步的操作放这里
+          // 不需要传递你要侦听的内容，自动会感知代码依赖，不需要传递很多参数，只要传递一个回调函数
+          // 不能获取之前数据的值
+          const stop = watchEffect(() => {
+            console.log(nameObj.name)
+            setTimeout(() => {
+              stop() // 五秒后侦听器失效
+            }, 5000)
+          })
+          const { name, englishName } = toRefs(nameObj)
+          return {
+            name,
+            englishName,
+          }
+        },
+        template: `
+          <div>
+            <div>
+              name：<input v-model="name"/>
+              name：{{name}}
+            </div>
+            <div>
+              Englishname：<input v-model="englishName"/>
+              Englishname：{{englishName}}
+            </div>
+          </div>
+      `,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+  </body>
+</html>
