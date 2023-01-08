@@ -1,37 +1,17 @@
 <template>
   <div>
-    <input v-model="inputValue" />
-    <button class="button" @click="hanldeAdd">添加</button>
+    <!-- router-link是跳转路由的标签 -->
+    <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link>
   </div>
-  <ul>
-    <list-item v-for="item in list" :key="item" :msg="item" />
-  </ul>
+  <!-- router-view负责展示当前路由对应的组件内容 -->
+  <router-view></router-view>
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
-import ListItem from './components/ListItem.vue'
 export default {
   name: 'App',
-  components: { ListItem },
-  setup() {
-    const inputValue = ref('')
-    const list = reactive([])
-    const hanldeAdd = () => {
-      list.push(inputValue.value)
-      inputValue.value = ' '
-    }
-    return {
-      inputValue,
-      list,
-      hanldeAdd,
-    }
-  },
 }
 </script>
 
-<style>
-.button {
-  margin-left: 20px;
-}
-</style>
+<style></style>

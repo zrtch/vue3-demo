@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import router from './router'
 
-createApp(App).mount('#app')
+//路由是指根据url 的不同，展示不同的内容
+createApp(App).use(router).mount('#app')
