@@ -1,25 +1,23 @@
 <template>
-  <div>111</div>
+  <div @click="handleClick">this is an about page</div>
+  <div>{{ myName }}</div>
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
-import ListItem from './ListItem.vue'
 export default {
-  // name: 'About',
-  components: { ListItem },
-  setup() {
-    const inputValue = ref('')
-    const list = reactive([])
-    const hanldeAdd = () => {
-      list.push(inputValue.value)
-      inputValue.value = ' '
-    }
-    return {
-      inputValue,
-      list,
-      hanldeAdd,
-    }
+  name: 'About',
+  computed: {
+    myName() {
+      return this.$store.state.name
+    },
+  },
+  methods: {
+    handleClick() {
+      // 第一步，想改变数据，vuex要求第一步，必须派发一个change的action,
+      this.$store.dispatch('change')
+      // 如果只是修改数据 也可以直接使用commit
+      // this.$store.commit('change')
+    },
   },
 }
 </script>
