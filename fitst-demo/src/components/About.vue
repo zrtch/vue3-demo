@@ -14,7 +14,7 @@ export default {
   methods: {
     handleClick() {
       // 第一步，想改变数据，vuex要求第一步，必须派发一个change的action,
-      this.$store.dispatch('change')
+      this.$store.dispatch('change', 'hello world')
       // 如果只是修改数据 也可以直接使用commit
       // this.$store.commit('change')
     },
