@@ -8,7 +8,8 @@ import { createStore } from 'vuex'
 // 4. mutation感知到提交的change改变，执行change方法改变数据
 export default createStore({
   state: {
-    name: "dell"
+    name: "dell",
+    vuexName: '111'
   },
   // mutation里面只允许写同步代码，不允许写异步代码
   // commit和mutation做关联
@@ -17,6 +18,9 @@ export default createStore({
     change(state, str) {
       // 第五步，在mutation里面修改数据
       state.name = str
+    },
+    changeVuexName(state, str) {
+      state.vuexName = str
     }
   },
   // action里面可以做异步操作
@@ -28,6 +32,9 @@ export default createStore({
       setTimeout(() => {
         store.commit('change', str)
       }, 1000)
+    },
+    changeVuex(store, str) {
+      store.commit('changeVuexName', str)
     }
   },
   modules: {

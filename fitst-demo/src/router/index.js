@@ -12,6 +12,12 @@ const routes = [
     name: 'About',
     // 异步加载路由：只有访问about页面才会加载about页面的代码；可以让访问页面更快
     component: () => import('../components/About.vue')
+  },
+  {
+    path: "/vuex",
+    name: 'Vuex',
+    // 异步加载路由：只有访问about页面才会加载about页面的代码；可以让访问页面更快
+    component: () => import('../components/CompositionVuex.vue')
   }
 ]
 
