@@ -35,7 +35,7 @@ export default createStore({
       }, 1000)
     },
     changeVuex(store, str) {
-      // 通过axios发送请求获取请求
+      // 通过axios发送请求获取数据
       axios
         .get(
           'https://www.fastmock.site/mock/ae8e9031947a302fed5f92425995aa19/jd/api/shop/hot-list'
