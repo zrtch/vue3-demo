@@ -47,12 +47,12 @@
           const { attrs, slots, emit } = context
           console.log(attrs) // 指的是父组件传递过来的 None - Props属性
 
-          console.log(slots.default()) //插槽内容可以直接通过slots来获取
+          console.log(slots.default()) // 插槽内容可以直接通过slots来获取
           // const { h } = Vue
           // return () => h('div', {}, slots.default())
 
           function handleClick() {
-            emit('change') //可以实现传统的this.$emit向上触发事件的功能
+            emit('change') // 可以实现传统的this.$emit向上触发事件的功能
           }
           return {
             handleClick,

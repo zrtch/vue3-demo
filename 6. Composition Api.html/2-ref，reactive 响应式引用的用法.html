@@ -30,7 +30,7 @@
           //   name,
           // }
 
-          // proxy , { age: 11 }变成proxy({ age: 11}）这样的一个响应式引用
+          // proxy, { age: 11 }变成proxy({ age: 11}）这样的一个响应式引用
           const { reactive, readonly } = Vue
           const nameObj = reactive({ age: 11 })
           const copynameObj = readonly(nameObj)
