@@ -7,14 +7,25 @@
     <div class="wrapper_input">
       <input class="wrapper_input_content" placeholder="请输入密码" />
     </div>
-    <div class="wrapper_login-button">登录</div>
+    <div class="wrapper_login-button" @click="handleLogin">登录</div>
     <div class="wrapper_login-link">立即注册</div>
   </div>
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 export default {
   name: "Login",
+  setup() {
+    const router = useRouter(); // 获取路由实例
+    const handleLogin = () => {
+      localStorage.isLogin = true;
+      router.push({ name: "Home" });
+    };
+    return {
+      handleLogin,
+    };
+  },
 };
 </script>
 
