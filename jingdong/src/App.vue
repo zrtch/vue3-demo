@@ -6,6 +6,17 @@
         >&#xe627;</span
       >
     </div>
+    <div class="search">
+      <span class="iconfont">&#xe651;</span>
+      山姆会员商店优惠商品
+    </div>
+    <div class="banner">
+      <img
+        class="banner_img"
+        src="http://www.dell-lee.com/imgs/vue3/banner.jpg"
+        alt=""
+      />
+    </div>
   </div>
   <div class="docker">
     <span class="docker_item docker_item--active">
@@ -55,6 +66,27 @@
     position: absolute;
     font-size: 0.16rem;
     right: 0;
+  }
+}
+.search {
+  margin-bottom: 0.12rem;
+  line-height: 0.32rem;
+  background: #f5f5f5;
+  color: #b7b7b7;
+  border-radius: 0.16rem;
+  font-size: 0.14rem;
+  .iconfont {
+    font-size: 0.16rem;
+    display: inline-block;
+    padding: 0 0.12rem 0 0.12rem;
+  }
+}
+.banner {
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 25.4%;
+  &_img {
+    width: 100%;
   }
 }
 .docker {
