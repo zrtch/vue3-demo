@@ -2,63 +2,37 @@
   <div class="wrapper">
     <img class="wrapper_img" src="http://www.dell-lee.com/imgs/vue3/user.png" />
     <div class="wrapper_input">
-      <input
-        class="wrapper_input_content"
-        placeholder="请输入用户名"
-        v-model="data.username"
-      />
+      <input class="wrapper_input_content" placeholder="请输入手机号" />
     </div>
     <div class="wrapper_input">
       <input
         class="wrapper_input_content"
         placeholder="请输入密码"
         type="password"
-        v-model="data.password"
       />
     </div>
-    <div class="wrapper_login-button" @click="handleLogin">登录</div>
-    <div class="wrapper_login-link" @click="handleRegisterClick">立即注册</div>
+    <div class="wrapper_input">
+      <input
+        class="wrapper_input_content"
+        placeholder="确认密码"
+        type="password"
+      />
+    </div>
+    <div class="wrapper_login-button">注册</div>
+    <div class="wrapper_login-link" @click="handleClick">已有账号去登录</div>
   </div>
 </template>
 
 <script>
 import { useRouter } from "vue-router";
-import { reactive } from "vue";
-import { post } from "../../utils/request";
-
 export default {
-  name: "Login",
+  name: "Register",
   setup() {
-    const data = reactive({
-      password: "",
-      username: "",
-    });
     const router = useRouter(); // 获取路由实例
-    const handleLogin = async () => {
-      try {
-        const result = await post("/api/user/login", {
-          username: data.username,
-          password: data.password,
-        });
-        if (result?.errno === 0) {
-          localStorage.isLogin = true;
-          router.push({ name: "Home" });
-        } else {
-          alert("登录失败");
-        }
-        console.log(result);
-      } catch (e) {
-        alert("请求失败");
-      }
+    const handleClick = () => {
+      router.push({ name: "Login" });
     };
-    const handleRegisterClick = () => {
-      router.push({ name: "Register" });
-    };
-    return {
-      data,
-      handleLogin,
-      handleRegisterClick,
-    };
+    return { handleClick };
   },
 };
 </script>
