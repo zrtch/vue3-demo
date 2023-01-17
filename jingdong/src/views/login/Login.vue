@@ -5,7 +5,7 @@
       <input
         class="wrapper_input_content"
         placeholder="请输入用户名"
-        v-model="data.username"
+        v-model="username"
       />
     </div>
     <div class="wrapper_input">
@@ -13,64 +13,70 @@
         class="wrapper_input_content"
         placeholder="请输入密码"
         type="password"
-        v-model="data.password"
+        v-model="password"
       />
     </div>
     <div class="wrapper_login-button" @click="handleLogin">登录</div>
     <div class="wrapper_login-link" @click="handleRegisterClick">立即注册</div>
-    <Toast v-if="data.showToast" :message="data.toastMsg" />
+    <Toast v-if="toastData.showToast" :message="toastData.toastMsg" />
   </div>
 </template>
 
 <script>
+import { reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import { reactive } from "vue";
 import { post } from "../../utils/request";
-import Toast from "../../components/Toast";
+import Toast, { useToastEffect } from "../../components/Toast";
+
+// 把这些逻辑放在不同的函数里面去管理，setup函数做一个代码流程控制的函数。
+// 处理登录逻辑，函数封装
+const useLoginEffect = (showToast) => {
+  const router = useRouter();
+  const data = reactive({ password: "", username: "" });
+
+  const handleLogin = async () => {
+    try {
+      const result = await post("/api/user/login", {
+        username: data.username,
+        password: data.password,
+      });
+      if (result?.errno === 0) {
+        localStorage.isLogin = true;
+        router.push({ name: "Home" });
+      } else {
+        showToast("登录失败");
+      }
+      console.log(result);
+    } catch (e) {
+      showToast("请求失败");
+    }
+  };
+  const { username, password } = toRefs(data);
+  return { username, password, handleLogin };
+};
+
+// 处理注册跳转
+const useRegisterEffect = () => {
+  const router = useRouter(); // 获取路由实例
+  const handleRegisterClick = () => {
+    router.push({ name: "Register" });
+  };
+  return { handleRegisterClick };
+};
 
 export default {
   name: "Login",
   components: { Toast },
+  // 职责就是告诉你，代码执行一个流程
   setup() {
-    const data = reactive({
-      password: "",
-      username: "",
-      showToast: false,
-      toastMsg: "",
-    });
-    const router = useRouter(); // 获取路由实例
+    const { toastData, showToast } = useToastEffect();
+    const { username, password, handleLogin } = useLoginEffect(showToast);
+    const { handleRegisterClick } = useRegisterEffect();
 
-    const showToast = (message) => {
-      data.showToast = true;
-      data.toastMsg = message;
-      setTimeout(() => {
-        data.showToast = false;
-        data.toastMsg = message;
-      }, 2000);
-    };
-
-    const handleLogin = async () => {
-      try {
-        const result = await post("11/api/user/login", {
-          username: data.username,
-          password: data.password,
-        });
-        if (result?.errno === 0) {
-          localStorage.isLogin = true;
-          router.push({ name: "Home" });
-        } else {
-          showToast("登录失败");
-        }
-        console.log(result);
-      } catch (e) {
-        showToast("请求失败");
-      }
-    };
-    const handleRegisterClick = () => {
-      router.push({ name: "Register" });
-    };
     return {
-      data,
+      username,
+      password,
+      toastData,
       handleLogin,
       handleRegisterClick,
     };
