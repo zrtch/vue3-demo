@@ -35,6 +35,13 @@ export default {
         tags: ["月售1万+", "月售1万+"],
         desc: "VIP尊享满89元减4元运费",
       },
+      {
+        id: 3,
+        img: "http://www.dell-lee.com/imgs/vue3/near.png",
+        title: "沃尔玛",
+        tags: ["月售1万+", "月售1万+"],
+        desc: "VIP尊享满89元减4元运费",
+      },
     ];
     return {
       list,
