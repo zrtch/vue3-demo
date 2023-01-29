@@ -6,7 +6,11 @@
       <div class="nearby_content">
         <div class="nearby_content_title">{{ item.title }}</div>
         <div class="nearby_content_tags">
-          <span class="nearby_content_tag" v-for="tag in item.tags">
+          <span
+            class="nearby_content_tag"
+            v-for="(tag, tagIdx) in item.tags"
+            :key="tagIdx"
+          >
             {{ tag }}
           </span>
         </div>
