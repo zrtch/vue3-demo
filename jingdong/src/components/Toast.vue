@@ -10,7 +10,7 @@ export default {
   props: ["message"],
 };
 
-// 管理弹窗的逻辑都封装到此处
+// 弹窗的逻辑都封装到此处
 export const useToastEffect = () => {
   const toastData = reactive({
     showToast: false,
