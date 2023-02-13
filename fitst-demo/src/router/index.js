@@ -17,6 +17,11 @@ const routes = [
     path: "/vuex",
     name: 'Vuex',
     component: () => import('../components/CompositionVuex.vue')
+  },
+  {
+    path: "/echarts",
+    name: 'Echarts',
+    component: () => import('../views/Echarts.vue')
   }
 ]
 
