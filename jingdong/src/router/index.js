@@ -1,37 +1,57 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/home/Home'
-import Login from '../views/login/Login'
-import Register from '../views/register/Register'
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'Home',
-    component: Home
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    // beforeEnter这个函数会在你进入到路由之前执行 
-    beforeEnter(to, from, next) {
-      const { isLogin } = localStorage;
-      isLogin ? next({ name: 'Home' }) : next()
-    }
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register,
-    beforeEnter(to, from, next) {
-      const { isLogin } = localStorage;
-      isLogin ? next({ name: 'Home' }) : next()
-    }
-  },
-  {
+    component: () => import(/* webpackChunkName: "home" */ '../views/home/Home')
+  },{
     path: '/cartList',
     name: 'CartList',
-    component: () => import('../views/cartList/CartList')
+    component: () => import(/* webpackChunkName: "cartList" */ '../views/cartList/CartList')
+  },{
+    path: '/orderConfirmation/:id/:addressId?',
+    name: 'OrderConfirmation',
+    component: () => import(/* webpackChunkName: "orderConfirmation" */ '../views/orderConfirmation/OrderConfirmation')
+  }, {
+    path: '/orderList',
+    name: 'OrderList',
+    component: () => import(/* webpackChunkName: "orderList" */ '../views/orderList/OrderList')
+  },{
+    path: '/shop/:id',
+    name: 'Shop',
+    component: () => import(/* webpackChunkName: "shop" */ '../views/shop/Shop')
+  }, {
+    path: '/register',
+    name: 'Register',
+    component: () => import(/* webpackChunkName: "register" */ '../views/register/Register'),
+    beforeEnter(to, from, next) {
+      const { isLogin } = localStorage;
+      isLogin ? next({ name: 'Home'}):  next();
+    }
+  }, {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/login/Login'),
+    beforeEnter(to, from, next) {
+      const { isLogin } = localStorage;
+      isLogin ? next({ name: 'Home'}):  next();
+    }
+  }, {
+    path: '/chooseAddressList/:shopId',
+    name: 'ChooseAddressList',
+    component: () => import(/* webpackChunkName: "chooseAddressList" */ '../views/chooseAddressList/ChooseAddressList'),
+  },{
+    path: '/myAddressList',
+    name: 'MyAddressList',
+    component: () => import(/* webpackChunkName: "myAddressList" */ '../views/myAddressList/MyAddressList'),
+  }, {
+    path: '/upsertAddress/:id?',
+    name: 'UpsertAddress',
+    component: () => import(/* webpackChunkName: "upsertAddress" */ '../views/upsertAddress/UpsertAddress'),
+  }, {
+    path: '/person',
+    name: 'PersonalInfo',
+    component: () => import(/* webpackChunkName: "person" */ '../views/personalInfo/PersonalInfo'),
   }
 ]
 
@@ -40,18 +60,11 @@ const router = createRouter({
   routes
 })
 
-// beforeEach：在路由每次做切换的时候执行
-// to：你要跳转到那个页面的信息
-// from：你从哪里跳过来的信息
-router.beforeEach((to, from, next) => {
-  const { isLogin } = localStorage
+router.beforeEach((to, from ,next) => {
+  const { isLogin } = localStorage;
   const { name } = to;
-  const isLoginOrRegister = (name === 'Login' || name === 'Register');
-  if (isLogin || isLoginOrRegister) {
-    next()  // 调用next让你正常往下执行 
-  } else {
-    next({ name: 'Login' })
-  }
+  const isLoginOrRegister = (name === "Login" || name === "Register");
+  (isLogin || isLoginOrRegister) ? next() : next({ name: 'Login'});
 })
 
 export default router

@@ -1,5 +1,4 @@
-// 文字省略效果
-@mixin  ellipsis{
+@mixin ellipsis {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
