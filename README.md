@@ -1,9 +1,6 @@
-Vue3 系统入门与项目实战
+## Vue3 系统入门与项目实战
 
 原文地址：[https://coding.imooc.com/class/chapter/472.html#Anchor](https://coding.imooc.com/class/chapter/472.html#Anchor)
-
-- 1-6 章为基础内容，对应的每个文件夹。
-- first-demo 以及 jingdong 为实战项目。
 
 ### 第 1 章 Vue 语法初探
 
