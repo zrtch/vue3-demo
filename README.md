@@ -1,13 +1,24 @@
 ## Vue3 系统入门与项目实战
 
-原文地址：[https://coding.imooc.com/class/chapter/472.html#Anchor](https://coding.imooc.com/class/chapter/472.html#Anchor)
+## 原文地址：[https://coding.imooc.com/class/chapter/472.html#Anchor](https://coding.imooc.com/class/chapter/472.html#Anchor)
 
-### 第 1 章 Vue 语法初探
+## 目录
+
+1. [第 1 章 Vue 语法初探](#jump1)
+2. [第 2 章 Vue 基础语法](#jump2)
+3. [第 3 章 探索组件的理念](#jump3)
+4. [第 4 章 Vue 中的动画](#jump4)
+5. [第 5 章 Vue 中的高级语法](#jump5)
+6. [第 6 章 Composition API](#jump6)
+
+### <span id="jump1">第 1 章 Vue 语法初探</span>
 
 更多的 API 特性；体积更小 速度更快；解决遗留问题； 更加强壮。
 之前是面向 DOM 编程，Vue 是面向数据编程。
 
-### 第 2 章 Vue 基础语法
+###
+
+### <span id="jump2">第 2 章 Vue 基础语法</span>
 
 #### 2-1 Vue 中应用和组件的基础概念
 
@@ -604,7 +615,7 @@ watch:{
 </html>
 ```
 
-### 第 3 章 探索组件的理念
+### <span id="jump3">第 3 章 探索组件的理念</span>
 
 #### 3-1 组件的定义及复用性，局部组件和全局组件
 
@@ -1119,7 +1130,7 @@ app.component('child-child', {
 })
 ```
 
-### 第 4 章 Vue 中的动画
+### <span id="jump4">第 4 章 Vue 中的动画</span>
 
 #### 4-1 使用 Vue 实现基础的 CSS 过渡与动画效果
 
@@ -1399,7 +1410,7 @@ enter-active-class：自定义的 class 名字可以帮助我们很方便的和�
 </script>
 ```
 
-### 第 5 章 Vue 中的高级语法
+### <span id="jump5">第 5 章 Vue 中的高级语法</span>
 
 #### 5-1 Mixin 混入的基础语法
 
@@ -1657,23 +1668,412 @@ plugin 插件，也是把通用性的功能封装起来。
 </script>
 ```
 
-### 第 6 章 Composition API
+### <span id="jump6">第 6 章 Composition API</span>
 
 #### 6-1 Setup 函数的使用
 
+setup 函数是在 created 实例被完全初始化之前执行的函数。
+
+```javascript
+<script>
+  const app = Vue.createApp({
+    template: `
+        <div @click="handleClick">{{name}}</div>
+      `,
+
+    setup() {
+      return {
+        name: 'dell',
+        handleClick: () => {
+          console.log(2)
+        },
+      }
+    },
+  })
+
+  const vm = app.mount('#root')
+</script>
+```
+
 #### 6-2 ref，reactive 响应式引用的用法和原理
+
+原理：通过 proxy 对数据进行封装，当数据变化时，触发模版等内容的更新
+
+- ref 处理基础类型的数据
+- reactive 处理非基础类型的数据，比如对象数组
+- readonly 对响应式的内容做一个限制，不可修改
+- toRefs:把一个 reactive 返回的对象转化成 ref 一种方式；创建一个 reactive 的对象你直接解构的话再模板是不能使用的，不具备响应式，如果想具备响应式，就调用 toRefs 转换就可以解构，再模板就可以具备响应式。
+
+```javascript
+  <script>
+    const app = Vue.createApp({
+      template: `
+        <div>{{name}}---{{nameObj.age}}</div>
+      `,
+      setup() {
+        // proxy , 'dell’变成proxy({value: 'dell'})这样的一个响应式引用
+        // const { ref } = Vue
+        // let name = ref('dell')
+        // setTimeout(() => {
+        //   name.value = 'lee'
+        // })
+        // return {
+        //   name,
+        // }
+
+        // proxy, { age: 11 }变成proxy({ age: 11}）这样的一个响应式引用
+        const { reactive, readonly } = Vue
+        const nameObj = reactive({ age: 11 })
+        const copynameObj = readonly(nameObj)
+        setTimeout(() => {
+          nameObj.age = 22
+          copynameObj.age = 33
+        }, 1000)
+        return {
+          nameObj,
+          copynameObj,
+        }
+      },
+    })
+
+    const vm = app.mount('#root')
+  </script>
+```
 
 #### 6-4 toRef 以及 context 参数
 
+toRef：可能出现对象里面没有对应的属性值的时候，又想让值具备响应式的时候
+
+```javascript
+  <script>
+    // const app = Vue.createApp({
+    //   template: `
+    //   <div>{{data.name}}--{{data.age}}</div>
+    // `,
+    //   setup(props, context) {
+    //     const { reactive, toRef } = Vue
+    //     const data = reactive({ name: 'dell' })
+    //     const age = toRef(data, 'age')
+    //     setTimeout(() => {
+    //       data.age = 11
+    //     }, 1000)
+    //     return {
+    //       data,
+    //     }
+    //   },
+    // })
+
+    const app = Vue.createApp({
+      methods: {
+        handleChange() {
+          console.log('context的emit数据')
+        },
+      },
+      template: `
+        <child @change="handleChange">parent</child>
+      `,
+    })
+
+    app.component('child', {
+      template: `
+          <div @click="handleClick">child</div>
+        `,
+      setup(props, context) {
+        const { attrs, slots, emit } = context
+        console.log(attrs) // 指的是父组件传递过来的 None - Props属性
+
+        console.log(slots.default()) // 插槽内容可以直接通过slots来获取
+        // const { h } = Vue
+        // return () => h('div', {}, slots.default())
+
+        function handleClick() {
+          emit('change') // 可以实现传统的this.$emit向上触发事件的功能
+        }
+        return {
+          handleClick,
+        }
+      },
+    })
+    const vm = app.mount('#root')
+  </script>
+```
+
 #### 6-6 使用 Composition API 开发 TodoList
+
+可以把数据和一些数据的操作摘出来，封装成小的函数进行维护
+
+```javascript
+  <script>
+    // 可以把数据和一些数据的操作摘出来，封装成小的函数进行维护
+    // 关于list操作的内容进行了封装
+    const listRelativeEffect = () => {
+      const { reactive } = Vue
+      const list = reactive([])
+      const addItemToList = (item) => {
+        list.push(item)
+      }
+      return {
+        list,
+        addItemToList,
+      }
+    }
+    // 关于inputValue 操作的内容进行了封装
+    const inputRelativeEffect = () => {
+      const { ref } = Vue
+      const inputValue = ref('')
+      const handleInputChange = (e) => {
+        inputValue.value = e.target.value
+      }
+      return {
+        inputValue,
+        handleInputChange,
+      }
+    }
+
+    const app = Vue.createApp({
+      setup() {
+        // 流程调度中转，知道我要操作list,inputValue，所以从不同的地方找到
+        const { list, addItemToList } = listRelativeEffect()
+        const { inputValue, handleInputChange } = inputRelativeEffect()
+        return {
+          list,
+          inputValue,
+          addItemToList,
+          handleInputChange,
+        }
+      },
+      template: `
+          <div>
+            <div>
+              <input :value="inputValue" @input="handleInputChange"/>
+              <div>{{inputValue}}</div>
+              <button @click="()=> addItemToList(inputValue)">提交</button>
+            </div>
+          </div>
+          <ul>
+            <li v-for="item in list" :key="item">{{item}}</li>
+          </ul>
+      `,
+    })
+
+    const vm = app.mount('#root')
+  </script>
+```
 
 #### 6-8 computed 方法生成计算属性
 
+computed 计算属性：调用 computed 方法，里面接收一个回调函数，去返回一个通过去其他属性计算出来的新值
+
+- get 方法就是读取他的内容
+- set 方法对他做一些赋值
+
+```javascript
+<script>
+  const app = Vue.createApp({
+    setup() {
+      const { ref, computed } = Vue
+      const count = ref(0)
+      const handleAdd = () => {
+        count.value += 1
+      }
+      //调用computed方法，里面接收一个回调函数，去返回一个通过去其他属性计算出来的新值
+      // const countFive = computed(() => {
+      //   return count.value + 5
+      // })
+
+      let countFive = computed({
+        // get方法就是读取他的内容
+        get: () => {
+          return count.value + 5
+        },
+        // set方法对他做一些赋值
+        set: (param) => {
+          count.value = param - 5
+        },
+      })
+      setTimeout(() => {
+        countFive.value = 50
+      }, 2000)
+
+      return {
+        count,
+        countFive,
+        handleAdd,
+      }
+    },
+    template: `
+          <div @click="handleAdd">
+            {{count}} --- {{countFive}}
+          </div>
+      `,
+  })
+
+  const vm = app.mount('#root')
+</script>
+```
+
 #### 6-9 watch 和 watchEffect 的使用和差异性
+
+- watch 侦听器
+  - 参数可以拿到原始和当前值，也可以侦听多个数据的变化，用一个侦听器承载
+  - 具备一定的惰性 lazy
+- watchEffect
+  - 立即执行 没有惰性 immediate；比如一些异步的操作放这里
+  - 加上{immediate:true}就会让他立即执行，就没有惰性
+  - 不需要传递你要侦听的内容，自动会感知代码依赖，不需要传递很多参数，只要传递一个回调函数
+  - 不能获取之前数据的值
+
+```javascript
+<script>
+  const app = Vue.createApp({
+    setup() {
+      const { reactive, toRefs, watch, watchEffect } = Vue
+      const nameObj = reactive({ name: 'dell', englishName: 'lee' })
+
+      // watch(
+      //   // 可以侦听多个数据的变化，用一个侦听器承载
+      //   [() => nameObj.name, () => nameObj.englishName],
+      //   ([curName, curEng], [prevName, prevEng]) => {
+      //     console.log(curName, prevName, '---', curEng, prevEng)
+      //   },
+      //   { immediate: true }
+      // )
+
+      // 立即执行 没有惰性 immediate；比如一些异步的操作放这里
+      // 不需要传递你要侦听的内容，自动会感知代码依赖，不需要传递很多参数，只要传递一个回调函数
+      // 不能获取之前数据的值
+      const stop = watchEffect(() => {
+        console.log(nameObj.name)
+        setTimeout(() => {
+          stop() // 五秒后侦听器失效
+        }, 5000)
+      })
+      const { name, englishName } = toRefs(nameObj)
+      return {
+        name,
+        englishName,
+      }
+    },
+    template: `
+          <div>
+            <div>
+              name：<input v-model="name"/>
+              name：{{name}}
+            </div>
+            <div>
+              Englishname：<input v-model="englishName"/>
+              Englishname：{{englishName}}
+            </div>
+          </div>
+      `,
+  })
+
+  const vm = app.mount('#root')
+</script>
+```
 
 #### 6-11 生命周期函数的新写法
 
-#### 6-12 Provide,Inject,模版 Ref 的用法
+- beforeMount => onBoforeMount
+- beforeMount => onBeforeMount
+- mounted => onMounted
+- beforeUpdate =>onBeforeUpdated
+- beforeUnmount => onBeforeUnmount
+- unmouted => onUnmounted
+- onRenderTracked：每次渲染后重新收集响应式依赖
+- onRenderTriggered：每次触发页面重新渲染时自动执行
+- 没有 beforeCreate 和 created 是因为这两个函数在 setup 函数之间，所以就没提供
+
+```javascript
+<script>
+  const app = Vue.createApp({
+    setup() {
+      const {
+        ref,
+        onBeforeMount,
+        onMounted,
+        onBeforeUpdate,
+        onUpdated,
+        onRenderTracked,
+        onRenderTriggered,
+      } = Vue
+      const name = ref('dell')
+      onBeforeMount(() => {
+        console.log('onBeforeMount')
+      })
+      onMounted(() => {
+        console.log('onMounted')
+      })
+      onBeforeUpdate(() => {
+        console.log('onBeforeUpdate')
+      })
+      onUpdated(() => {
+        console.log('onUpdated')
+      })
+      onRenderTracked(() => {
+        console.log('onRenderTracked')
+      })
+      onRenderTriggered(() => {
+        console.log('onRenderTriggered')
+      })
+      const handleClick = () => {
+        name.value = 'lee'
+      }
+      return {
+        name,
+        handleClick,
+      }
+    },
+
+    template: `
+        <div @click="handleClick">{{name}}</div>
+      `,
+  })
+
+  const vm = app.mount('#root')
+</script>
+```
+
+#### 6-12 Provide, Inject, 模版 Ref 的用法
+
+```javascript
+    <script>
+      const app = Vue.createApp({
+        setup() {
+          const { provide, ref, readonly } = Vue
+          const name = ref('dell')
+          provide('name', readonly(name))
+          provide('changeName', (value) => {
+            name.value = value
+          })
+          return {}
+        },
+
+        template: `
+        <div><child /></div>
+      `,
+      })
+
+      app.component('child', {
+        setup() {
+          const { inject } = Vue
+          const name = inject('name')
+          const changeName = inject('changeName')
+          const handleClick = () => {
+            // 调用父组件传递过来的这个方法去改
+            // name.value = '11' // 在子组件直接改就会报错，约束单项数据流
+            changeName('lee')
+          }
+          return { name, handleClick }
+        },
+        template: `
+        <div @click="handleClick">{{name}}</div>
+      `,
+      })
+
+      const vm = app.mount('#root')
+    </script>
+```
 
 ### 第 7 章 Vue 项目开发配套工具讲解
 
