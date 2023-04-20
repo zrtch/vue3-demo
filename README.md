@@ -1,6 +1,4 @@
-## Vue3 系统入门与项目实战
-
-## 原文地址：[https://coding.imooc.com/class/chapter/472.html#Anchor](https://coding.imooc.com/class/chapter/472.html#Anchor)
+## Vue3 入门与实战
 
 ## 目录
 
