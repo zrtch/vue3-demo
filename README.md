@@ -119,12 +119,12 @@
 
 #### 2-5 常用模版语法讲解
 
-v-bind ：绑定对应的变量
-v-once：后面数据发生改变，它也不会改变；可以降低无用的渲染
-v-on：模板事件绑定
-v-html：通过 html 方式展示这个变量
-v-if：通过变量 true 或 false 来进行展示
-@click.prevent：绑定了一个事件，这个事件会阻止当前的默认行为；可以帮助简化常用代码的编写。
+- v-bind ：绑定对应的变量
+- v-once：后面数据发生改变，它也不会改变；可以降低无用的渲染
+- v-on：模板事件绑定
+- v-html：通过 html 方式展示这个变量
+- v-if：通过变量 true 或 false 来进行展示
+- @click.prevent：绑定了一个事件，这个事件会阻止当前的默认行为；可以帮助简化常用代码的编写。
 
 ```html
 <body>
@@ -205,72 +205,72 @@ watch:{
 - computed 和 method 都能实现的一个功能，建议使用 computed，因为有缓存
 - computed 和 watcher 都能实现的功能，建议使用 computed 因为更加简洁
 
-```javascript
+```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-</head>
-<body>
-  <div id="root"></div>
-  <script>
-    const app = Vue.createApp({
-      data(){
-        return{
-          message:"hello",
-          count:5,
-          price:2,
-          newTotal:10
-        }
-      },
-      // 侦听器；通过watch可以监听变量的改变，然后去做一些异步的操作
-      watch:{
-        price(){
-          setTimeout(()=>{
-            console.log('price changed');
-          },3000)
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            message: 'hello',
+            count: 5,
+            price: 2,
+            newTotal: 10,
+          }
         },
-        // count 发生变化时，函数会执行
-        count(current,prev){
-          this.newTotal = current * this.price
+        // 侦听器；通过watch可以监听变量的改变，然后去做一些异步的操作
+        watch: {
+          price() {
+            setTimeout(() => {
+              console.log('price changed')
+            }, 3000)
+          },
+          // count 发生变化时，函数会执行
+          count(current, prev) {
+            this.newTotal = current * this.price
+          },
         },
-      },
-      computed: {
-        // 当计算属性依赖的内容发生变更时，才会重新执行计算
-        // 定义计算属性 total; 这个数据是由其他的几个数据算出来的，当其他数据变化的时候，我也会跟着变
-        total() {
-          return Date.now()
-          // return  this.count * this.price
-        }
-      },
-      methods:{
-        handleClick(){
-          console.log('click', this.message);
+        computed: {
+          // 当计算属性依赖的内容发生变更时，才会重新执行计算
+          // 定义计算属性 total; 这个数据是由其他的几个数据算出来的，当其他数据变化的时候，我也会跟着变
+          total() {
+            return Date.now()
+            // return  this.count * this.price
+          },
         },
-        // 可以在插值表达式里面使用
-        formString(string){
-          return string.toUpperCase()
+        methods: {
+          handleClick() {
+            console.log('click', this.message)
+          },
+          // 可以在插值表达式里面使用
+          formString(string) {
+            return string.toUpperCase()
+          },
+          // 只要页面重新渲染，才会重新计算
+          getTotal() {
+            return Date.now()
+            // return  this.count * this.price
+          },
         },
-        // 只要页面重新渲染，才会重新计算
-        getTotal(){
-          return Date.now()
-          // return  this.count * this.price
-        }
-      },
-      template: `
+        template: `
       <div @click="handleClick">{{ formString(message) }}</div>
       <div>{{ total }}</div>
       <div>{{ getTotal() }}</div>
       <div>{{ newTotal }}</div>
-      `
-    })
-    const vm = app.mount('#root')
-  </script>
-</body>
+      `,
+      })
+      const vm = app.mount('#root')
+    </script>
+  </body>
 </html>
 ```
 
@@ -449,11 +449,11 @@ watch:{
 - 事件修饰符
   - @click.stop，停止向外做这个事件的冒泡
   - @click.self，self 表示这个事件的触发必须是我自己这个 dom 标签的触发才会执行。
-  - @click.prevent，组织默认行为
-  - @click.capture，捕获
+  - @click.prevent，阻止默认行为
+  - @click.capture，在事件的捕获阶段触发父级元素的事件
   - @click.once，事件只执行一次
 - 按键修饰符
-  - @keydown.enetr，当你按回车的时候的才会执行
+  - @keydown.enter，当你按回车的时候的才会执行
   - 还有 tab, delete, esc, up, down；通过这些修饰符来修饰按键事件的绑定
 - 鼠标修饰符
   - @click.left， @click.right，@click.middle
@@ -712,35 +712,34 @@ const vm = app.mount('#root')
 多个值时候可以使用 v-bind="params"
 
 ```javascript
-<script>
-  const app = Vue.createApp({
+const app = Vue.createApp({
   data() {
     return {
       params: {
         content: 2000,
         a: 111,
         b: 222,
-        c: 333
+        c: 333,
       },
-      content: 'abc'
+      content: 'abc',
     }
   },
   template: `<div>
           <test v-bind="params" :content-abc="content"/>
           <counter :count="params.a"/>
-        </div>`
+        </div>`,
 })
 // 单项数据流
 app.component('counter', {
   props: ['count'],
   data() {
     return {
-      myCount: this.count
+      myCount: this.count,
     }
   },
   template: `
         <div @click="myCount += 1">单向数据流：{{myCount}}<button>增加</button></div>
-      `
+      `,
 })
 
 app.component('test', {
@@ -754,10 +753,9 @@ app.component('test', {
   template: `<div>
     <div>{{contentAbc}}</div>
     {{ content }}--{{a}}--{{b}}--{{c}}
-  </div>`
+  </div>`,
 })
 const vm = app.mount('#root')
-</script>
 ```
 
 #### 3-6 Non-Props 属性是什么
@@ -785,92 +783,89 @@ Non-Props 属性:父组件给子组件传递内容的是时候， 子组件不�
 #### 3-7 父子组件间如何通过事件进行通信
 
 ```javascript
-  <script>
-    const app = Vue.createApp({
-      data(){
-        return{
-          count: 1,
-          count2:2
-        }
-      },
-      methods:{
-        handleAddOne(param1,param2){
-          console.log('监听addOne事件', param2  );
-          this.count += param2
-        }
-      },
-      template: `<div>
+const app = Vue.createApp({
+  data() {
+    return {
+      count: 1,
+      count2: 2,
+    }
+  },
+  methods: {
+    handleAddOne(param1, param2) {
+      console.log('监听addOne事件', param2)
+      this.count += param2
+    },
+  },
+  template: `<div>
           <test :count="count" @add="handleAddOne"/>
           <counter v-model="count2"/>
-        </div>`
-    })
+        </div>`,
+})
 
-    app.component('test',{
-      props:['count'],
-      emits:{ // 通过emtis向外触发的参数做一些校验
-        add: (count)=>{
-          if(count>0){
-            return true
-          }
-          return false
-        }
-      },
-      methods:{
-        handleClick(){
-          // 向父组件触发一个 addOne 的事件
-          this.$emit("add",2,4)
-        }
-      },
-      template:`<div @click="handleClick">{{count}}</div>`
-    })
+app.component('test', {
+  props: ['count'],
+  emits: {
+    // 通过emtis向外触发的参数做一些校验
+    add: (count) => {
+      if (count > 0) {
+        return true
+      }
+      return false
+    },
+  },
+  methods: {
+    handleClick() {
+      // 向父组件触发一个 addOne 的事件
+      this.$emit('add', 2, 4)
+    },
+  },
+  template: `<div @click="handleClick">{{count}}</div>`,
+})
 
-    // 直接在父组件使用v-model
-    app.component('counter',{
-      props:['modelValue'], // 固定写法
-      methods:{
-        handleClick(){
-          this.$emit("update:modelValue",this.modelValue + 3)
-        }
-      },
-      template: `<div @click="handleClick">{{modelValue}}</div>`
-    })
+// 直接在父组件使用v-model
+app.component('counter', {
+  props: ['modelValue'], // 固定写法
+  methods: {
+    handleClick() {
+      this.$emit('update:modelValue', this.modelValue + 3)
+    },
+  },
+  template: `<div @click="handleClick">{{modelValue}}</div>`,
+})
 
-    const vm = app.mount('#root')
-  </script>
+const vm = app.mount('#root')
 ```
 
 #### 3-9 组件间双向绑定高级内容
 
 ```javascript
-  <script>
-    const app = Vue.createApp({
-      data(){
-        return{
-          count: 1,
-          count1: 1,
-        }
-      },
-      template: `<counter v-model:count="count" v-model:count1="count1"/>`
-    })
+const app = Vue.createApp({
+  data() {
+    return {
+      count: 1,
+      count1: 1,
+    }
+  },
+  template: `<counter v-model:count="count" v-model:count1="count1"/>`,
+})
 
-    app.component('counter',{
-      props:['count','count1'],
-      methods:{
-        handleClick(){
-          this.$emit("update:count",this.count + 1)
-        },
-        handleClick1(){
-          this.$emit('update:count1',this.count1 + 2)
-        }
-      },
-      template: `
+app.component('counter', {
+  props: ['count', 'count1'],
+  methods: {
+    handleClick() {
+      this.$emit('update:count', this.count + 1)
+    },
+    handleClick1() {
+      this.$emit('update:count1', this.count1 + 2)
+    },
+  },
+  template: `
         <div @click="handleClick">{{count}}</div>
         <div @click="handleClick1">{{count1}}</div>
-      `
-    })
+      `,
+})
 
-    const vm = app.mount('#root')
-  </script>
+const vm = app.mount('#root')
 ```
 
 Vue 自定义修饰符：[https://www.cnblogs.com/-LemonWater-/p/16617043.html](https://www.cnblogs.com/-LemonWater-/p/16617043.html)
@@ -913,17 +908,15 @@ slot 中使用的数据，作用域的问题。父模版里调用的数据属性
 slot 默认值设定：<slot>default value</slot>；如果没传插槽，就会使用默认值 default value。
 
 ```javascript
-<script>
-	//
-	// slot中使用的数据，作用域的问题。父模版里调用的数据属性,使用的都是父模版里的数据；子模版里调用的数据属性,使用的都是子模版里的数据
-	// slot默认值设定：<slot>default value</slot>；如果没传插槽，就会使用默认值 default value
-	const app = Vue.createApp({
-		data(){
-			return{
-				text:'提交'
-			}
-		},
-		template: `
+// slot中使用的数据，作用域的问题。父模版里调用的数据属性,使用的都是父模版里的数据；子模版里调用的数据属性,使用的都是子模版里的数据
+// slot默认值设定：<slot>default value</slot>；如果没传插槽，就会使用默认值 default value
+const app = Vue.createApp({
+  data() {
+    return {
+      text: '提交',
+    }
+  },
+  template: `
 			<myForm>
 				<div>div{{text}}</div>
 			</myForm>
@@ -933,34 +926,32 @@ slot 默认值设定：<slot>default value</slot>；如果没传插槽，就会�
 			<myForm>
 				<button>button{{text}}</button>
 			</myForm>
-		`
-	})
-	app.component('myForm',{
-		methods:{
-			handleClick(){
-				console.log(222);
-			}
-		},
-		template:`
+		`,
+})
+app.component('myForm', {
+  methods: {
+    handleClick() {
+      console.log(222)
+    },
+  },
+  template: `
 			<div>
 				<input />
 				<span @click="handleClick">
 					<slot>default value</slot>
 				</span>
-			</div>`
-	})
+			</div>`,
+})
 
-	const vm = app.mount('#root')
-</script>
+const vm = app.mount('#root')
 ```
 
 具名插槽：要把插槽拆成几个部分，然后在下面分开的调用，通过 name 去做区分。
 插槽简写：v-slot:header -> #header
 
 ```javascript
-<script>
-	const app = Vue.createApp({
-		template: `
+const app = Vue.createApp({
+  template: `
 			<layout>
 				<template v-slot:header>
 					<div>header</div>
@@ -969,20 +960,19 @@ slot 默认值设定：<slot>default value</slot>；如果没传插槽，就会�
 					<div>footer</div>
 				</template>
 			</layout>
-		`
-	})
+		`,
+})
 
-	app.component('layout',{
-		template:`
+app.component('layout', {
+  template: `
 			<div>
 				<slot name="header"></slot>
 				<div>content</div>
 				<slot name="footer"></slot>
 			</div>
-		`
-	})
-	const vm = app.mount('#root')
-</script>
+		`,
+})
+const vm = app.mount('#root')
 ```
 
 #### 3-12 作用域插槽
@@ -1067,37 +1057,34 @@ v-once: 标签只被渲染一次，后面数据发生变化也不要在渲染。
 ref：实际上是获取 Dom 节点/组件引用的一个语法。
 
 ```javascript
-<script>
-  const app = Vue.createApp({
-  data(){
+const app = Vue.createApp({
+  data() {
     return {
-      num: 1
+      num: 1,
     }
-  },  
-  mounted(){
+  },
+  mounted() {
     // 获取dom
-    console.log(this.$refs.count);
+    console.log(this.$refs.count)
     // 也可以通过引用来调用子组件方法
     this.$refs.common.sayHello()
   },
   template: `<div @click="num += 1" v-once>
           <div ref="count">{{num}}</div>
           <common-item ref="common"/>
-        </div>`
+        </div>`,
 })
 
-
-app.component('common-item',{
-  methods:{
-    sayHello(){
-      console.log('hello');
-    }
+app.component('common-item', {
+  methods: {
+    sayHello() {
+      console.log('hello')
+    },
   },
-  template: `hello`
+  template: `hello`,
 })
 
 const vm = app.mount('#root')
-  </script>
 ```
 
 provide / inject：多层组件传值，provide 提供数据，inject 直接使用。
@@ -1582,88 +1569,84 @@ plugin 插件，也是把通用性的功能封装起来。
 - options：额外的参数会放到 options 里。
 - app.use(myPlugin, {name:'dell'}) // 使用 myPlugin 这个插件
 
-```html
-<script>
-  const myPlugin = {
-    install(app, options) {
-      // app：就是Vue的实例
-      // options：额外的参数会放到options里
-      app.provide('name', 'dell lee') // 在app里扩展了这个名字
-      app.directive('focus', {
-        // 扩展自定义指令
-        mounted(el) {
-          el.focus()
-        },
-      })
-      app.mixin({
-        // 扩展mixin
-        mounted() {
-          console.log('mixin')
-        },
-      })
-    },
-  }
+```javascript
+const myPlugin = {
+  install(app, options) {
+    // app：就是Vue的实例
+    // options：额外的参数会放到options里
+    app.provide('name', 'dell lee') // 在app里扩展了这个名字
+    app.directive('focus', {
+      // 扩展自定义指令
+      mounted(el) {
+        el.focus()
+      },
+    })
+    app.mixin({
+      // 扩展mixin
+      mounted() {
+        console.log('mixin')
+      },
+    })
+  },
+}
 
-  const app = Vue.createApp({
-    template: `<div><test /></div>`,
-  })
-  app.component('test', {
-    inject: ['name'],
-    template: `
+const app = Vue.createApp({
+  template: `<div><test /></div>`,
+})
+app.component('test', {
+  inject: ['name'],
+  template: `
       <div>{{name}}</div>
       <input v-focus />
     `,
-  })
+})
 
-  app.use(myPlugin, { name: 'dell' }) // 使用myPlugin这个插件
+app.use(myPlugin, { name: 'dell' }) // 使用myPlugin这个插件
 
-  const vm = app.mount('#root')
-</script>
+const vm = app.mount('#root')
 ```
 
 #### 5-9 数据校验插件开发实例
 
 对数据做检验的插件，扩展 vue 的语法想做一些自定义的时候，完全可以通过 plugin 来做。
 
-```html
-<script>
-  const app = Vue.createApp({
-    data() {
-      return {
-        name: 'dell',
-        age: 11,
+```javascript
+const app = Vue.createApp({
+  data() {
+    return {
+      name: 'dell',
+      age: 11,
+    }
+  },
+  rules: {
+    age: {
+      validate: (age) => {
+        return age > 25
+      },
+      message: '太年轻了',
+    },
+  },
+  template: `<div>name:{{name}}, age:{{age}}</div>`,
+})
+
+// 对数据做检验的插件,扩展vue的语法想做一些自定义的时候，完全可以通过plugin来做。
+const validatePlugin = (app, options) => {
+  app.mixin({
+    created() {
+      for (let key in this.$options.rules) {
+        const item = this.$options.rules[key]
+        this.$watch(key, (value) => {
+          const result = item.validate(value)
+          if (!result) console.log(item.message)
+        })
       }
     },
-    rules: {
-      age: {
-        validate: (age) => {
-          return age > 25
-        },
-        message: '太年轻了',
-      },
-    },
-    template: `<div>name:{{name}}, age:{{age}}</div>`,
   })
+}
 
-  // 对数据做检验的插件,扩展vue的语法想做一些自定义的时候，完全可以通过plugin来做。
-  const validatePlugin = (app, options) => {
-    app.mixin({
-      created() {
-        for (let key in this.$options.rules) {
-          const item = this.$options.rules[key]
-          this.$watch(key, (value) => {
-            const result = item.validate(value)
-            if (!result) console.log(item.message)
-          })
-        }
-      },
-    })
-  }
+app.use(validatePlugin)
 
-  app.use(validatePlugin)
-
-  const vm = app.mount('#root')
-</script>
+const vm = app.mount('#root')
 ```
 
 ### <span id="jump6">第 6 章 Composition API</span>
@@ -1673,24 +1656,22 @@ plugin 插件，也是把通用性的功能封装起来。
 setup 函数是在 created 实例被完全初始化之前执行的函数。
 
 ```javascript
-<script>
-  const app = Vue.createApp({
-    template: `
+const app = Vue.createApp({
+  template: `
         <div @click="handleClick">{{name}}</div>
       `,
 
-    setup() {
-      return {
-        name: 'dell',
-        handleClick: () => {
-          console.log(2)
-        },
-      }
-    },
-  })
+  setup() {
+    return {
+      name: 'dell',
+      handleClick: () => {
+        console.log(2)
+      },
+    }
+  },
+})
 
-  const vm = app.mount('#root')
-</script>
+const vm = app.mount('#root')
 ```
 
 #### 6-2 ref，reactive 响应式引用的用法和原理
@@ -1735,7 +1716,6 @@ setup 函数是在 created 实例被完全初始化之前执行的函数。
     })
 
     const vm = app.mount('#root')
-  </script>
 ```
 
 #### 6-4 toRef 以及 context 参数
@@ -1743,57 +1723,55 @@ setup 函数是在 created 实例被完全初始化之前执行的函数。
 toRef：可能出现对象里面没有对应的属性值的时候，又想让值具备响应式的时候
 
 ```javascript
-  <script>
-    // const app = Vue.createApp({
-    //   template: `
-    //   <div>{{data.name}}--{{data.age}}</div>
-    // `,
-    //   setup(props, context) {
-    //     const { reactive, toRef } = Vue
-    //     const data = reactive({ name: 'dell' })
-    //     const age = toRef(data, 'age')
-    //     setTimeout(() => {
-    //       data.age = 11
-    //     }, 1000)
-    //     return {
-    //       data,
-    //     }
-    //   },
-    // })
+// const app = Vue.createApp({
+//   template: `
+//   <div>{{data.name}}--{{data.age}}</div>
+// `,
+//   setup(props, context) {
+//     const { reactive, toRef } = Vue
+//     const data = reactive({ name: 'dell' })
+//     const age = toRef(data, 'age')
+//     setTimeout(() => {
+//       data.age = 11
+//     }, 1000)
+//     return {
+//       data,
+//     }
+//   },
+// })
 
-    const app = Vue.createApp({
-      methods: {
-        handleChange() {
-          console.log('context的emit数据')
-        },
-      },
-      template: `
+const app = Vue.createApp({
+  methods: {
+    handleChange() {
+      console.log('context的emit数据')
+    },
+  },
+  template: `
         <child @change="handleChange">parent</child>
       `,
-    })
+})
 
-    app.component('child', {
-      template: `
+app.component('child', {
+  template: `
           <div @click="handleClick">child</div>
         `,
-      setup(props, context) {
-        const { attrs, slots, emit } = context
-        console.log(attrs) // 指的是父组件传递过来的 None - Props属性
+  setup(props, context) {
+    const { attrs, slots, emit } = context
+    console.log(attrs) // 指的是父组件传递过来的 None - Props属性
 
-        console.log(slots.default()) // 插槽内容可以直接通过slots来获取
-        // const { h } = Vue
-        // return () => h('div', {}, slots.default())
+    console.log(slots.default()) // 插槽内容可以直接通过slots来获取
+    // const { h } = Vue
+    // return () => h('div', {}, slots.default())
 
-        function handleClick() {
-          emit('change') // 可以实现传统的this.$emit向上触发事件的功能
-        }
-        return {
-          handleClick,
-        }
-      },
-    })
-    const vm = app.mount('#root')
-  </script>
+    function handleClick() {
+      emit('change') // 可以实现传统的this.$emit向上触发事件的功能
+    }
+    return {
+      handleClick,
+    }
+  },
+})
+const vm = app.mount('#root')
 ```
 
 #### 6-6 使用 Composition API 开发 TodoList
@@ -1801,46 +1779,45 @@ toRef：可能出现对象里面没有对应的属性值的时候，又想让值
 可以把数据和一些数据的操作摘出来，封装成小的函数进行维护
 
 ```javascript
-  <script>
-    // 可以把数据和一些数据的操作摘出来，封装成小的函数进行维护
-    // 关于list操作的内容进行了封装
-    const listRelativeEffect = () => {
-      const { reactive } = Vue
-      const list = reactive([])
-      const addItemToList = (item) => {
-        list.push(item)
-      }
-      return {
-        list,
-        addItemToList,
-      }
-    }
-    // 关于inputValue 操作的内容进行了封装
-    const inputRelativeEffect = () => {
-      const { ref } = Vue
-      const inputValue = ref('')
-      const handleInputChange = (e) => {
-        inputValue.value = e.target.value
-      }
-      return {
-        inputValue,
-        handleInputChange,
-      }
-    }
+// 可以把数据和一些数据的操作摘出来，封装成小的函数进行维护
+// 关于list操作的内容进行了封装
+const listRelativeEffect = () => {
+  const { reactive } = Vue
+  const list = reactive([])
+  const addItemToList = (item) => {
+    list.push(item)
+  }
+  return {
+    list,
+    addItemToList,
+  }
+}
+// 关于inputValue 操作的内容进行了封装
+const inputRelativeEffect = () => {
+  const { ref } = Vue
+  const inputValue = ref('')
+  const handleInputChange = (e) => {
+    inputValue.value = e.target.value
+  }
+  return {
+    inputValue,
+    handleInputChange,
+  }
+}
 
-    const app = Vue.createApp({
-      setup() {
-        // 流程调度中转，知道我要操作list,inputValue，所以从不同的地方找到
-        const { list, addItemToList } = listRelativeEffect()
-        const { inputValue, handleInputChange } = inputRelativeEffect()
-        return {
-          list,
-          inputValue,
-          addItemToList,
-          handleInputChange,
-        }
-      },
-      template: `
+const app = Vue.createApp({
+  setup() {
+    // 流程调度中转，知道我要操作list,inputValue，所以从不同的地方找到
+    const { list, addItemToList } = listRelativeEffect()
+    const { inputValue, handleInputChange } = inputRelativeEffect()
+    return {
+      list,
+      inputValue,
+      addItemToList,
+      handleInputChange,
+    }
+  },
+  template: `
           <div>
             <div>
               <input :value="inputValue" @input="handleInputChange"/>
@@ -1852,10 +1829,9 @@ toRef：可能出现对象里面没有对应的属性值的时候，又想让值
             <li v-for="item in list" :key="item">{{item}}</li>
           </ul>
       `,
-    })
+})
 
-    const vm = app.mount('#root')
-  </script>
+const vm = app.mount('#root')
 ```
 
 #### 6-8 computed 方法生成计算属性
