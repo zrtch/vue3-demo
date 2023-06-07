@@ -1684,38 +1684,37 @@ const vm = app.mount('#root')
 - toRefs:把一个 reactive 返回的对象转化成 ref 一种方式；创建一个 reactive 的对象你直接解构的话再模板是不能使用的，不具备响应式，如果想具备响应式，就调用 toRefs 转换就可以解构，再模板就可以具备响应式。
 
 ```javascript
-  <script>
-    const app = Vue.createApp({
-      template: `
+const app = Vue.createApp({
+  template: `
         <div>{{name}}---{{nameObj.age}}</div>
       `,
-      setup() {
-        // proxy , 'dell’变成proxy({value: 'dell'})这样的一个响应式引用
-        // const { ref } = Vue
-        // let name = ref('dell')
-        // setTimeout(() => {
-        //   name.value = 'lee'
-        // })
-        // return {
-        //   name,
-        // }
+  setup() {
+    // proxy , 'dell’变成proxy({value: 'dell'})这样的一个响应式引用
+    // const { ref } = Vue
+    // let name = ref('dell')
+    // setTimeout(() => {
+    //   name.value = 'lee'
+    // })
+    // return {
+    //   name,
+    // }
 
-        // proxy, { age: 11 }变成proxy({ age: 11}）这样的一个响应式引用
-        const { reactive, readonly } = Vue
-        const nameObj = reactive({ age: 11 })
-        const copynameObj = readonly(nameObj)
-        setTimeout(() => {
-          nameObj.age = 22
-          copynameObj.age = 33
-        }, 1000)
-        return {
-          nameObj,
-          copynameObj,
-        }
-      },
-    })
+    // proxy, { age: 11 }变成proxy({ age: 11}）这样的一个响应式引用
+    const { reactive, readonly } = Vue
+    const nameObj = reactive({ age: 11 })
+    const copynameObj = readonly(nameObj)
+    setTimeout(() => {
+      nameObj.age = 22
+      copynameObj.age = 33
+    }, 1000)
+    return {
+      nameObj,
+      copynameObj,
+    }
+  },
+})
 
-    const vm = app.mount('#root')
+const vm = app.mount('#root')
 ```
 
 #### 6-4 toRef 以及 context 参数
@@ -1842,48 +1841,46 @@ computed 计算属性：调用 computed 方法，里面接收一个回调函数�
 - set 方法对他做一些赋值
 
 ```javascript
-<script>
-  const app = Vue.createApp({
-    setup() {
-      const { ref, computed } = Vue
-      const count = ref(0)
-      const handleAdd = () => {
-        count.value += 1
-      }
-      //调用computed方法，里面接收一个回调函数，去返回一个通过去其他属性计算出来的新值
-      // const countFive = computed(() => {
-      //   return count.value + 5
-      // })
+const app = Vue.createApp({
+  setup() {
+    const { ref, computed } = Vue
+    const count = ref(0)
+    const handleAdd = () => {
+      count.value += 1
+    }
+    //调用computed方法，里面接收一个回调函数，去返回一个通过去其他属性计算出来的新值
+    // const countFive = computed(() => {
+    //   return count.value + 5
+    // })
 
-      let countFive = computed({
-        // get方法就是读取他的内容
-        get: () => {
-          return count.value + 5
-        },
-        // set方法对他做一些赋值
-        set: (param) => {
-          count.value = param - 5
-        },
-      })
-      setTimeout(() => {
-        countFive.value = 50
-      }, 2000)
+    let countFive = computed({
+      // get方法就是读取他的内容
+      get: () => {
+        return count.value + 5
+      },
+      // set方法对他做一些赋值
+      set: (param) => {
+        count.value = param - 5
+      },
+    })
+    setTimeout(() => {
+      countFive.value = 50
+    }, 2000)
 
-      return {
-        count,
-        countFive,
-        handleAdd,
-      }
-    },
-    template: `
+    return {
+      count,
+      countFive,
+      handleAdd,
+    }
+  },
+  template: `
           <div @click="handleAdd">
             {{count}} --- {{countFive}}
           </div>
       `,
-  })
+})
 
-  const vm = app.mount('#root')
-</script>
+const vm = app.mount('#root')
 ```
 
 #### 6-9 watch 和 watchEffect 的使用和差异性
@@ -1898,37 +1895,36 @@ computed 计算属性：调用 computed 方法，里面接收一个回调函数�
   - 不能获取之前数据的值
 
 ```javascript
-<script>
-  const app = Vue.createApp({
-    setup() {
-      const { reactive, toRefs, watch, watchEffect } = Vue
-      const nameObj = reactive({ name: 'dell', englishName: 'lee' })
+const app = Vue.createApp({
+  setup() {
+    const { reactive, toRefs, watch, watchEffect } = Vue
+    const nameObj = reactive({ name: 'dell', englishName: 'lee' })
 
-      // watch(
-      //   // 可以侦听多个数据的变化，用一个侦听器承载
-      //   [() => nameObj.name, () => nameObj.englishName],
-      //   ([curName, curEng], [prevName, prevEng]) => {
-      //     console.log(curName, prevName, '---', curEng, prevEng)
-      //   },
-      //   { immediate: true }
-      // )
+    // watch(
+    //   // 可以侦听多个数据的变化，用一个侦听器承载
+    //   [() => nameObj.name, () => nameObj.englishName],
+    //   ([curName, curEng], [prevName, prevEng]) => {
+    //     console.log(curName, prevName, '---', curEng, prevEng)
+    //   },
+    //   { immediate: true }
+    // )
 
-      // 立即执行 没有惰性 immediate；比如一些异步的操作放这里
-      // 不需要传递你要侦听的内容，自动会感知代码依赖，不需要传递很多参数，只要传递一个回调函数
-      // 不能获取之前数据的值
-      const stop = watchEffect(() => {
-        console.log(nameObj.name)
-        setTimeout(() => {
-          stop() // 五秒后侦听器失效
-        }, 5000)
-      })
-      const { name, englishName } = toRefs(nameObj)
-      return {
-        name,
-        englishName,
-      }
-    },
-    template: `
+    // 立即执行 没有惰性 immediate；比如一些异步的操作放这里
+    // 不需要传递你要侦听的内容，自动会感知代码依赖，不需要传递很多参数，只要传递一个回调函数
+    // 不能获取之前数据的值
+    const stop = watchEffect(() => {
+      console.log(nameObj.name)
+      setTimeout(() => {
+        stop() // 五秒后侦听器失效
+      }, 5000)
+    })
+    const { name, englishName } = toRefs(nameObj)
+    return {
+      name,
+      englishName,
+    }
+  },
+  template: `
           <div>
             <div>
               name：<input v-model="name"/>
@@ -1940,15 +1936,13 @@ computed 计算属性：调用 computed 方法，里面接收一个回调函数�
             </div>
           </div>
       `,
-  })
+})
 
-  const vm = app.mount('#root')
-</script>
+const vm = app.mount('#root')
 ```
 
 #### 6-11 生命周期函数的新写法
 
-- beforeMount => onBoforeMount
 - beforeMount => onBeforeMount
 - mounted => onMounted
 - beforeUpdate =>onBeforeUpdated
@@ -1959,53 +1953,51 @@ computed 计算属性：调用 computed 方法，里面接收一个回调函数�
 - 没有 beforeCreate 和 created 是因为这两个函数在 setup 函数之间，所以就没提供
 
 ```javascript
-<script>
-  const app = Vue.createApp({
-    setup() {
-      const {
-        ref,
-        onBeforeMount,
-        onMounted,
-        onBeforeUpdate,
-        onUpdated,
-        onRenderTracked,
-        onRenderTriggered,
-      } = Vue
-      const name = ref('dell')
-      onBeforeMount(() => {
-        console.log('onBeforeMount')
-      })
-      onMounted(() => {
-        console.log('onMounted')
-      })
-      onBeforeUpdate(() => {
-        console.log('onBeforeUpdate')
-      })
-      onUpdated(() => {
-        console.log('onUpdated')
-      })
-      onRenderTracked(() => {
-        console.log('onRenderTracked')
-      })
-      onRenderTriggered(() => {
-        console.log('onRenderTriggered')
-      })
-      const handleClick = () => {
-        name.value = 'lee'
-      }
-      return {
-        name,
-        handleClick,
-      }
-    },
+const app = Vue.createApp({
+  setup() {
+    const {
+      ref,
+      onBeforeMount,
+      onMounted,
+      onBeforeUpdate,
+      onUpdated,
+      onRenderTracked,
+      onRenderTriggered,
+    } = Vue
+    const name = ref('dell')
+    onBeforeMount(() => {
+      console.log('onBeforeMount')
+    })
+    onMounted(() => {
+      console.log('onMounted')
+    })
+    onBeforeUpdate(() => {
+      console.log('onBeforeUpdate')
+    })
+    onUpdated(() => {
+      console.log('onUpdated')
+    })
+    onRenderTracked(() => {
+      console.log('onRenderTracked')
+    })
+    onRenderTriggered(() => {
+      console.log('onRenderTriggered')
+    })
+    const handleClick = () => {
+      name.value = 'lee'
+    }
+    return {
+      name,
+      handleClick,
+    }
+  },
 
-    template: `
+  template: `
         <div @click="handleClick">{{name}}</div>
       `,
-  })
+})
 
-  const vm = app.mount('#root')
-</script>
+const vm = app.mount('#root')
 ```
 
 #### 6-12 Provide, Inject, 模版 Ref 的用法
