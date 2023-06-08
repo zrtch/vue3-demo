@@ -2003,54 +2003,57 @@ const vm = app.mount('#root')
 #### 6-12 Provide, Inject, 模版 Ref 的用法
 
 ```javascript
-    <script>
-      const app = Vue.createApp({
-        setup() {
-          const { provide, ref, readonly } = Vue
-          const name = ref('dell')
-          provide('name', readonly(name))
-          provide('changeName', (value) => {
-            name.value = value
-          })
-          return {}
-        },
+const app = Vue.createApp({
+  setup() {
+    const { provide, ref, readonly } = Vue
+    const name = ref('dell')
+    provide('name', readonly(name))
+    provide('changeName', (value) => {
+      name.value = value
+    })
+    return {}
+  },
 
-        template: `
+  template: `
         <div><child /></div>
       `,
-      })
+})
 
-      app.component('child', {
-        setup() {
-          const { inject } = Vue
-          const name = inject('name')
-          const changeName = inject('changeName')
-          const handleClick = () => {
-            // 调用父组件传递过来的这个方法去改
-            // name.value = '11' // 在子组件直接改就会报错，约束单项数据流
-            changeName('lee')
-          }
-          return { name, handleClick }
-        },
-        template: `
+app.component('child', {
+  setup() {
+    const { inject } = Vue
+    const name = inject('name')
+    const changeName = inject('changeName')
+    const handleClick = () => {
+      // 调用父组件传递过来的这个方法去改
+      // name.value = '11' // 在子组件直接改就会报错，约束单项数据流
+      changeName('lee')
+    }
+    return { name, handleClick }
+  },
+  template: `
         <div @click="handleClick">{{name}}</div>
       `,
-      })
+})
 
-      const vm = app.mount('#root')
-    </script>
+const vm = app.mount('#root')
 ```
 
 ### 第 7 章 Vue 项目开发配套工具讲解
 
 #### 7-1 VueCLI 的使用和单文件组件
 
-```javascript
-npm install nrm -g // 安装nrm然后运行
-nrm ls // 就可以查看国内镜像源
-nrm use taobao // 使用taobao镜像源
-npm i -g @vue/cli // 全局安装脚手架工具
-vue create first-demo //通过脚手架安装vu项目
+```lua
+-- 安装nrm然后运行
+npm install nrm -g
+-- 就可以查看国内镜像源
+nrm ls
+-- 使用taobao镜像源
+nrm use taobao
+-- 全局安装脚手架工具
+npm i -g @vue/cli
+-- 通过脚手架安装vu项目
+vue create first-demo
 ```
 
 单文件组件：.vue 文件就代表了一个组件。
@@ -2099,7 +2102,7 @@ export default router
 - router-link： 是跳转路由的标签
 - router-view：负责展示当前路由对应的组件内容
 
-```vue
+```javascript
 <template>
   <div>
     <!-- router-link是跳转路由的标签 -->
@@ -2107,7 +2110,7 @@ export default router
     <router-link to="/about">About</router-link> |
     <router-link to="/vuex">Vuex</router-link>
   </div>
-  <!-- router-view负责展示当前路由对应的组件内容 -->
+    // router-view负责展示当前路由对应的组件内容
   <router-view></router-view>
 </template>
 
@@ -2131,13 +2134,12 @@ Vuex 数据管理框架；VueX 创建了一个全局唯一的仓库，用来存�
 3. commit 提交一个叫做 change 的数据改变。
 4. mutation 感知到提交的 change 改变，执行 change 方法改变数据。
 
-```vue
+```javascript
 <template>
-   
   <div @click="handleClick">this is an about page</div>
-   
   <div>{{ myName }}</div>
 </template>
+
 <script>
 export default {
   name: 'About',
@@ -2203,11 +2205,12 @@ export default createStore({
 
 通过 `import { useStore } from 'vuex' `来使用。
 
-```vue
+```javascript
 <template>
     <button @click="handleClick">改变vuex数据</button>  
   <div>{{ vuexName }}</div>
 </template>
+
 <script>
 import { useStore } from 'vuex'
 import { toRefs } from 'vue'
@@ -2224,15 +2227,30 @@ export default {
 </script>
 ```
 
-```vue
-import { createStore } from 'vuex' import axios from 'axios' export default
-createStore({   state: {     name: "dell",     vuexName: '111'   },   mutations:
-{     changeVuexName(state, str) {       state.vuexName = str     }   },  
-actions: {     changeVuex(store, str) {       // 通过axios发送请求获取请求      
-axios         .get(          
-'https://www.fastmock.site/mock/ae8e9031947a302fed5f92425995aa19/jd/api/shop/hot-list'
-        )         .then((res) => {           const data = res.data.message      
-    store.commit('changeVuexName', data)         })     }   },   modules: {   }
+```javascript
+import { createStore } from 'vuex'
+import axios from 'axios'
+export default createStore({
+  state: { name: 'dell', vuexName: '111' },
+  mutations: {
+    changeVuexName(state, str) {
+      state.vuexName = str
+    },
+  },
+  actions: {
+    changeVuex(store, str) {
+      // 通过axios发送请求获取请求
+      axios
+        .get(
+          'https://www.fastmock.site/mock/ae8e9031947a302fed5f92425995aa19/jd/api/shop/hot-list'
+        )
+        .then((res) => {
+          const data = res.data.message
+          store.commit('changeVuexName', data)
+        })
+    },
+  },
+  modules: {},
 })
 ```
 
@@ -2271,62 +2289,61 @@ BEM CSS 命名规范：block_element--Modifier，element 要做一个状态修�
 
 把通用的 css 样式摘离出去，放到变量里面去管理
 
-```vue
-// 新建通过样式 viriables.scss $content-fontcolor:#333 // 使用如下
-使用这个变量即可
+```html
+<!-- 新建通过样式 viriables.scss $content-fontcolor:#333  -->
+<!-- 使用如下 使用这个变量即可 -->
 <style lang="scss">
-@import './style/viriables.scss';
-.positon {
-  color: $content-fontcolor;
-}
+  @import './style/viriables.scss';
+  .positon {
+    color: $content-fontcolor;
+  }
 </style>
 ```
 
 mixins 管理通用 css 样式
 
-```vue
-// 文字省略效果 @mixin ellipsis{ overflow: hidden; white-space: nowrap;
-text-overflow: ellipsis; } // 使用方法
+```html
+<!-- 文字省略效果 @mixin ellipsis{ overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } -->
 <style lang="scss">
-@import './style/mixins.scss';
-.positon {
-  @include ellipsis; // 这样就有文字省略效果
-}
+  @import './style/mixins.scss';
+  .positon {
+    @include ellipsis; // 这样就有文字省略效果
+  }
 </style>
 ```
 
 网速慢引起图片的抖动效果，使用 padding-bottom 撑开图片，避免抖动。
 
-```vue
+```html
 <div class="banner">
-	<img
-		class="banner_img"
-		src="http://www.dell-lee.com/imgs/vue3/banner.jpg"
-		alt=""
-	/>
+  <img
+    class="banner_img"
+    src="http://www.dell-lee.com/imgs/vue3/banner.jpg"
+    alt=""
+  />
 </div>
 <style>
-.banner {
-  height: 0;
-  overflow: hidden;
-  padding-bottom: 25.4%; //图片的的25.4%
-  &_img {
-    width: 100%;
+  .banner {
+    height: 0;
+    overflow: hidden;
+    padding-bottom: 25.4%; //图片的的25.4%
+    &_img {
+      width: 100%;
+    }
   }
-}
 </style>
 ```
 
 父级元素使用左右 padding 就会导致子元素左右留白
 
-```vue
-// 子元素使用margin即可解决 margin: 0 -0.18rem;
+```html
+<!-- 子元素使用margin即可解决 margin: 0 -0.18rem; -->
 ```
 
 一个组件的样式只能作用于组件内部，不应该影响到外部的组件，只需要在我们的 css 标签上加上 scoped 属性，
 表示我的这个样式只对我这个组件有效；可以避免不同组件样式之间的影响。
 
-```vue
+```html
 <style lang="scss" scoped></style>
 ```
 
@@ -2428,8 +2445,7 @@ export const post = (url, data = {}) => {
 }
 ```
 
-```vue
-<script>
+```javascript
 import { useRouter } from 'vue-router'
 import { post } from '../../utils/request' // 引入对应的post方法
 
@@ -2465,12 +2481,11 @@ export default {
     }
   },
 }
-</script>
 ```
 
 #### 3. 弹窗组件开发
 
-```vue
+```javascript
 <template>
   <div class="toast">{{ message }}</div>
 </template>
@@ -2515,7 +2530,7 @@ export const useToastEffect = () => {
 </style>
 ```
 
-```vue
+```javascript
 <Toast v-if="toastData.showToast" :message="toastData.toastMsg" />
 
 <script>
@@ -2564,8 +2579,7 @@ export default {
 
 把这些逻辑放在不同的函数里面去管理，setup 函数做一个代码流程控制的函数。
 
-```vue
-<script>
+```javascript
 import { reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { post } from '../../utils/request'
@@ -2623,10 +2637,11 @@ export default {
     }
   },
 }
-</script>
 ```
 
 **第 10 章 商家展示功能开发（上）**
+
 **第 11 章 商家展示功能开发（下）**
+
 **第 12 章 核心购物链路开发**
 **代码地址：**[https://github.com/zrtch/vue3-demo/tree/master/jingdong](https://github.com/zrtch/vue3-demo/tree/master/jingdong)
