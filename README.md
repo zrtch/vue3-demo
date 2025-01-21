@@ -203,7 +203,7 @@ watch:{
 ```
 
 - computed 和 method 都能实现的一个功能，建议使用 computed，因为有缓存
-- computed 和 watcher 都能实现的功能，建议使用 computed 因为更加简洁
+- computed 和 watcher 都能实现的功能，建议使用 computed 因为更加简洁。
 
 ```html
 <!DOCTYPE html>
